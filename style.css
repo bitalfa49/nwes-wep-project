@@ -1,4 +1,4 @@
-/* Radar 24 - Professional Stylesheet V3 */
+/* Radar 24 - Professional Stylesheet V3 - Updated */
 :root {
     --main-blue: #002b5b;
     --radar-red: #d90429;
@@ -35,56 +35,47 @@ nav ul li a:hover, nav ul li a.active { color: #ffcc00; border-bottom: 2px solid
 .ticker-wrap { background: #000; color: white; height: 40px; display: flex; align-items: center; overflow: hidden; }
 .ticker-title { background: var(--radar-red); padding: 0 15px; height: 100%; display: flex; align-items: center; font-weight: bold; position: relative; z-index: 5; font-size: 0.9rem; }
 
-/* News Grid */
-.news-grid { 
-    display: grid; 
-    grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); 
-    gap: 15px; 
-    padding: 15px 0; 
-}
-
-.news-card { 
-    background: white; border-radius: 10px; overflow: hidden; 
-    box-shadow: var(--shadow); transition: 0.3s; 
-    display: flex; flex-direction: column; position: relative;
-}
-
-.card-img-wrap { width: 100%; height: 180px; background: #eee; overflow: hidden; }
-.card-img-wrap img { width: 100%; height: 100%; object-fit: cover; }
-
-.badge-cat { 
-    position: absolute; top: 10px; right: 10px; 
-    background: var(--radar-red); color: white; 
-    padding: 2px 10px; font-size: 0.75rem; font-weight: bold; border-radius: 4px;
-}
-
-.card-content { padding: 15px; flex-grow: 1; }
-.card-content h3 { color: var(--main-blue); margin-bottom: 8px; font-size: 1.1rem; line-height: 1.4; }
-.card-content p { color: #555; font-size: 0.85rem; height: 3.6em; overflow: hidden; }
-
-.card-footer { 
-    padding: 10px 15px; background: #fdfdfd; 
-    border-top: 1px solid #eee; display: flex; justify-content: space-between; 
-    font-size: 0.75rem; color: #888;
-}
-
-/* About Section Styling */
+/* About Page Specific Styling */
 .about-hero {
     background: linear-gradient(135deg, var(--main-blue) 0%, #004d99 100%);
-    color: white; padding: 40px 20px; border-radius: 15px; text-align: center; margin: 20px 0;
+    color: white; padding: 60px 20px; border-radius: 25px; text-align: center; margin: 30px 0;
+    box-shadow: var(--shadow);
 }
-.about-card { background: white; padding: 25px; border-radius: 12px; margin-bottom: 20px; border-right: 5px solid var(--radar-red); box-shadow: var(--shadow); }
 
-/* Modal for Reading More */
-.modal {
-    display: none; position: fixed; z-index: 2000; top: 0; left: 0; 
-    width: 100%; height: 100%; background: rgba(0,0,0,0.8);
+.slogan-box {
+    background: rgba(217, 4, 41, 0.1);
+    border-right: 5px solid var(--radar-red);
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 10px;
+    font-size: 1.4rem;
+    font-weight: 900;
+    color: var(--main-blue);
 }
-.modal-content {
-    background: white; margin: 5% auto; padding: 20px; width: 90%; max-width: 700px;
-    border-radius: 12px; position: relative; max-height: 85vh; overflow-y: auto;
+
+.feature-card {
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    transition: 0.3s;
+    border-bottom: 3px solid transparent;
 }
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    border-bottom: 3px solid var(--radar-red);
+}
+
+.feature-card i {
+    font-size: 2rem;
+    color: var(--radar-red);
+    margin-bottom: 15px;
+}
+
+/* Modal and Buttons preserved */
+.modal { display: none; position: fixed; z-index: 2000; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); }
+.modal-content { background: white; margin: 5% auto; padding: 20px; width: 90%; max-width: 700px; border-radius: 12px; position: relative; max-height: 85vh; overflow-y: auto; }
 .close { position: absolute; left: 15px; top: 10px; font-size: 28px; cursor: pointer; color: var(--radar-red); }
-
-/* Buttons */
 .btn-delete { background: #ff4444; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 0.7rem; }
