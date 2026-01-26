@@ -3,24 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>حجرة القيادة | رادار 24</title>
+    <title>حجرة القيادة | رادار 24 السحابي</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 </head>
 <body style="background: #eef2f7;">
 
     <div id="loginGate" class="admin-login-wrapper">
         <i class="fas fa-lock-open" style="font-size: 3rem; color: var(--main-blue); margin-bottom: 15px;"></i>
         <h2 style="color: var(--main-blue);">بوابة الناشرين</h2>
-        <p style="color: #666; margin-bottom: 25px;">يرجى إثبات الهوية للوصول للرادار</p>
+        <p style="color: #666; margin-bottom: 25px;">يرجى إثبات الهوية للوصول للرادار العالمي</p>
         <input type="password" id="adminPass" placeholder="كلمة المرور السرية" style="width:100%; padding:15px; border-radius:10px; border:1px solid #ddd; text-align: center; font-size: 1.1rem; margin-bottom: 20px;">
         <button onclick="unlockRadar()" class="btn-post">دخول النظام</button>
     </div>
 
     <div id="radarDashboard" class="container" style="display: none; padding: 40px 0;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
-            <h2 style="color: var(--main-blue);"><i class="fas fa-plus-circle"></i> إضافة خبر للميدان</h2>
+            <h2 style="color: var(--main-blue);"><i class="fas fa-cloud-upload-alt"></i> إضافة خبر للميدان السحابي</h2>
             <button onclick="location.reload()" style="background: #ddd; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">خروج</button>
         </div>
 
@@ -58,13 +61,21 @@
             </div>
 
             <button onclick="publishToRadar()" class="btn-post" id="publishBtn">
-                <i class="fas fa-upload"></i> نشر الخبر في الرادار الآن
+                <i class="fas fa-upload"></i> نشر الخبر عالمياً الآن
             </button>
         </div>
     </div>
 
     <script>
+        // إعدادات Firebase الخاصة بك
+        const firebaseConfig = {
+            databaseURL: "https://radar24lb-972bb-default-rtdb.europe-west1.firebasedatabase.app/"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
         function unlockRadar() {
+            // كلمة السر الخاصة بك
             if(document.getElementById('adminPass').value === "hassan@123456789") {
                 document.getElementById('loginGate').style.display = 'none';
                 document.getElementById('radarDashboard').style.display = 'block';
@@ -87,23 +98,30 @@
             const time = new Date().toLocaleString('ar-EG', { hour: 'numeric', minute: 'numeric', day: 'numeric', month: 'long' });
 
             if(!title || !imageFile || !text) {
-                alert("برجاء إكمال جميع البيانات (العنوان، الصورة، النص)!");
+                alert("برجاء إكمال جميع البيانات!");
                 return;
             }
 
-            document.getElementById('publishBtn').innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري النشر...';
+            const btn = document.getElementById('publishBtn');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الرفع للسحابة...';
+            btn.disabled = true;
 
             const reader = new FileReader();
             reader.onloadend = function() {
                 const base64Image = reader.result;
                 const newEntry = { title, category, image: base64Image, text, time };
                 
-                let database = JSON.parse(localStorage.getItem('radar_news')) || [];
-                database.push(newEntry);
-                localStorage.setItem('radar_news', JSON.stringify(database));
-
-                alert("تم إرسال الخبر للرئيسية بنجاح!");
-                location.reload();
+                // إرسال البيانات إلى Firebase
+                db.ref('allNews').push(newEntry)
+                .then(() => {
+                    alert("تم نشر الخبر بنجاح ووصل لجميع المتابعين!");
+                    location.reload();
+                })
+                .catch((error) => {
+                    alert("حدث خطأ في السحابة: " + error.message);
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-upload"></i> نشر الخبر في الرادار الآن';
+                });
             }
             reader.readAsDataURL(imageFile);
         }
