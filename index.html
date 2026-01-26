@@ -75,13 +75,13 @@
             allNewsData = Object.values(data).reverse();
             displayNews(allNewsData);
 
-            // تجهيز النص العاجل
-            const breakingText = allNewsData.slice(0, 10).map(n => n.title).join('  • • •  ');
+            const latestNews = allNewsData[0].title;
             
-            // نكرر النص مرتين لضمان أن الشريط لا يفرغ أبداً (تم التعديل بناءً على طلبك)
+            const separator = '<span style="display:inline-block; width:80px; height:8px; background-color:var(--main-blue); margin: 0 40px; vertical-align:middle; border-radius:4px;"></span>';
+            
             const tickerElement = document.getElementById('breakingTicker');
             if(tickerElement) {
-                tickerElement.innerHTML = `<span>${breakingText}</span><span>${breakingText}</span>`;
+                tickerElement.innerHTML = `<span>${latestNews}</span>${separator}<span>${latestNews}</span>${separator}`;
             }
         });
 
