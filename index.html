@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>رادار 24 الإخبارية | عينك على الحدث</title>
+    <title>رادار 24 | عينك على الحدث</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
-    
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 </head>
@@ -17,11 +16,11 @@
         <div class="container header-flex">
             <div class="logo"><span>رادار</span> 24</div>
             <nav>
-                <ul>
-                    <li><a href="index.html"><i class="fas fa-home"></i> الرئيسية</a></li>
-                    <li><a href="#"><i class="fas fa-globe"></i> أخبار العالم</a></li>
-                    <li><a href="#"><i class="fas fa-bolt"></i> عاجل</a></li>
-                    <li><a href="about.html"><i class="fas fa-info-circle"></i> من نحن</a></li>
+                <ul id="mainNav">
+                    <li><a href="#" class="active" onclick="filterNews('الكل')">الرئيسية</a></li>
+                    <li><a href="#" onclick="filterNews('أخبار العالم')">أخبار العالم</a></li>
+                    <li><a href="#" onclick="filterNews('عاجل')">عاجل</a></li>
+                    <li><a href="about.html">من نحن</a></li>
                     <li><a href="admin.html" style="color: #ffcc00;"><i class="fas fa-user-shield"></i> الإدارة</a></li>
                 </ul>
             </nav>
@@ -30,84 +29,124 @@
 
     <div class="ticker-wrap">
         <div class="ticker-title">عاجل</div>
-        <marquee behavior="scroll" direction="right" scrollamount="6">
-            رادار 24: انطلاق البث المباشر المربوط بالسحابة العالمية.. نضعكم في قلب الحدث أينما كنتم..
+        <marquee id="breakingTicker" behavior="scroll" direction="right" scrollamount="6">
+            جاري تحميل آخر التحديثات من رادار 24...
         </marquee>
     </div>
 
-    <main class="container" style="margin-top: 40px;">
-        <div style="display: flex; justify-content: space-between; align-items: center; border-right: 5px solid var(--radar-red); padding-right: 15px; margin-bottom: 30px;">
-            <h2 style="color: var(--main-blue); font-size: 1.8rem;">تغطية حصرية مباشرة (عالمي)</h2>
-        </div>
+    <main class="container" style="margin-top: 30px;">
+        <h2 id="sectionTitle" style="border-right: 5px solid var(--radar-red); padding-right: 15px; margin-bottom: 20px; color: var(--main-blue);">
+            تغطية حصرية مباشرة
+        </h2>
         
         <div class="news-grid" id="newsContainer">
-            <div style="text-align:center; grid-column: 1/-1; padding: 50px;">
-                <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: var(--main-blue);"></i>
-                <p>جاري الاتصال بالسحابة وجلب الأخبار...</p>
             </div>
-        </div>
     </main>
 
+    <div id="newsModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <div id="modalBody">
+                </div>
+        </div>
+    </div>
+
     <footer style="background: var(--main-blue); color: white; text-align: center; padding: 40px 0; margin-top: 60px; border-top: 5px solid var(--radar-red);">
-        <p style="font-weight: bold;">© 2026 شبكة رادار 24 الإخبارية - جميع الحقوق محفوظة</p>
-        <div style="margin-top: 15px; font-size: 1.5rem; display: flex; justify-content: center; gap: 20px;">
-            <i class="fab fa-facebook"></i> <i class="fab fa-twitter"></i> <i class="fab fa-youtube"></i>
+        <p>© 2026 شبكة رادار 24 الإخبارية - جميع الحقوق محفوظة</p>
+        <div class="social-links" style="margin-top: 20px;">
+            <a href="https://www.facebook.com/seraj.lsyed?mibextid=ZbWKwL" target="_blank"><i class="fab fa-facebook"></i></a>
+            <a href="https://chat.whatsapp.com/Io7exzjLzPb3apvogScREM" target="_blank"><i class="fab fa-whatsapp"></i></a>
         </div>
     </footer>
 
     <script>
-        // إعدادات Firebase الخاصة برابطك
         const firebaseConfig = {
             databaseURL: "https://radar24lb-972bb-default-rtdb.europe-west1.firebasedatabase.app/"
         };
-        
-        // بدء تشغيل Firebase
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        function loadRadarNews() {
+        let allNewsData = [];
+
+        // جلب الأخبار وتحديث الشريط العاجل
+        db.ref('allNews').on('value', (snapshot) => {
+            const data = snapshot.val();
+            if (!data) return;
+            
+            allNewsData = Object.values(data).reverse();
+            displayNews(allNewsData);
+
+            // تحديث شريط العاجل بآخر 5 عناوين
+            const breaking = allNewsData.slice(0, 5).map(n => n.title).join(' --- ');
+            document.getElementById('breakingTicker').innerText = breaking;
+        });
+
+        function displayNews(newsList) {
             const container = document.getElementById('newsContainer');
+            container.innerHTML = '';
 
-            // جلب البيانات من السحابة في الوقت الفعلي (Realtime)
-            db.ref('allNews').on('value', (snapshot) => {
-                const data = snapshot.val();
-                container.innerHTML = '';
-
-                if (!data) {
-                    container.innerHTML = `
-                        <div style="text-align:center; grid-column: 1/-1; padding: 100px 0;">
-                            <i class="far fa-newspaper" style="font-size: 4rem; color: #ddd; margin-bottom: 20px;"></i>
-                            <p style="color: #888; font-size: 1.2rem;">لا توجد أخبار منشورة في السحابة حالياً.</p>
-                        </div>`;
-                    return;
-                }
-
-                // تحويل البيانات من كائنات (Objects) إلى مصفوفة وعرضها من الأحدث للأقدم
-                const newsArray = Object.values(data);
-                newsArray.reverse().forEach(news => {
-                    container.innerHTML += `
-                        <article class="news-card">
-                            <div class="card-img-wrap">
-                                <img src="${news.image}" alt="خبر">
-                                <span class="badge-cat">${news.category}</span>
-                            </div>
-                            <div class="card-content">
-                                <h3>${news.title}</h3>
-                                <p>${news.text.substring(0, 120)}...</p>
-                            </div>
-                            <div class="card-footer">
-                                <span><i class="far fa-calendar-alt"></i> ${news.time}</span>
-                                <span style="color: var(--radar-red); font-weight: bold; cursor: pointer;">إقرأ المزيد +</span>
-                            </div>
-                        </article>
-                    `;
-                });
-            }, (error) => {
-                container.innerHTML = `<p style="text-align:center; grid-column:1/-1;">خطأ في الاتصال بالسحابة: ${error.message}</p>`;
+            newsList.forEach((news, index) => {
+                // التحقق مما إذا كان هناك صورة أم لا
+                const imageHtml = news.image ? `<div class="card-img-wrap"><img src="${news.image}"></div>` : '';
+                
+                container.innerHTML += `
+                    <article class="news-card">
+                        <span class="badge-cat">${news.category}</span>
+                        ${imageHtml}
+                        <div class="card-content">
+                            <h3>${news.title}</h3>
+                            <p>${news.text.substring(0, 100)}...</p>
+                        </div>
+                        <div class="card-footer">
+                            <span><i class="far fa-clock"></i> ${news.time}</span>
+                            <span onclick="openNews(${allNewsData.indexOf(news)})" style="color: var(--radar-red); font-weight: bold; cursor: pointer;">إقرأ المزيد +</span>
+                        </div>
+                    </article>`;
             });
         }
 
-        window.onload = loadRadarNews;
+        // نظام الفلترة
+        function filterNews(category) {
+            document.getElementById('sectionTitle').innerText = category === 'الكل' ? 'تغطية حصرية مباشرة' : category;
+            
+            // تغيير الـ Active في القائمة
+            const links = document.querySelectorAll('#mainNav a');
+            links.forEach(link => link.classList.remove('active'));
+            event.target.classList.add('active');
+
+            if (category === 'الكل') {
+                displayNews(allNewsData);
+            } else {
+                const filtered = allNewsData.filter(n => n.category === category);
+                displayNews(filtered);
+            }
+        }
+
+        // فتح الخبر بالكامل
+        function openNews(index) {
+            const news = allNewsData[index];
+            const modalBody = document.getElementById('modalBody');
+            const imageHtml = news.image ? `<img src="${news.image}" style="width:100%; border-radius:10px; margin-bottom:15px;">` : '';
+
+            modalBody.innerHTML = `
+                ${imageHtml}
+                <span class="badge-cat" style="position:static; margin-bottom:10px; display:inline-block;">${news.category}</span>
+                <h2 style="color:var(--main-blue); margin-bottom:15px;">${news.title}</h2>
+                <p style="white-space: pre-wrap; color:#333; line-height:1.8;">${news.text}</p>
+                <hr style="margin:20px 0; opacity:0.2;">
+                <small style="color:#888;">نُشر في: ${news.time}</small>
+            `;
+            document.getElementById('newsModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('newsModal').style.display = 'none';
+        }
+
+        // إغلاق النافذة عند الضغط خارجها
+        window.onclick = function(event) {
+            if (event.target == document.getElementById('newsModal')) closeModal();
+        }
     </script>
 </body>
 </html>
