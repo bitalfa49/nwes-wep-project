@@ -3,71 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>حجرة القيادة | رادار 24 السحابي</title>
+    <title>حجرة القيادة | رادار 24</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
-    
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 </head>
 <body style="background: #eef2f7;">
 
-    <div id="loginGate" class="admin-login-wrapper">
-        <i class="fas fa-lock-open" style="font-size: 3rem; color: var(--main-blue); margin-bottom: 15px;"></i>
-        <h2 style="color: var(--main-blue);">بوابة الناشرين</h2>
-        <p style="color: #666; margin-bottom: 25px;">يرجى إثبات الهوية للوصول للرادار العالمي</p>
-        <input type="password" id="adminPass" placeholder="كلمة المرور السرية" style="width:100%; padding:15px; border-radius:10px; border:1px solid #ddd; text-align: center; font-size: 1.1rem; margin-bottom: 20px;">
-        <button onclick="unlockRadar()" class="btn-post">دخول النظام</button>
+    <div id="loginGate" style="max-width: 400px; margin: 100px auto; background: white; padding: 30px; border-radius: 15px; text-align: center; box-shadow: var(--shadow);">
+        <i class="fas fa-user-shield" style="font-size: 3rem; color: var(--main-blue); margin-bottom: 15px;"></i>
+        <h2 style="margin-bottom: 20px;">دخول الإدارة</h2>
+        <input type="password" id="adminPass" placeholder="كلمة المرور" style="width:100%; padding:12px; margin-bottom:15px; border-radius:8px; border:1px solid #ddd; text-align:center;">
+        <button onclick="unlockRadar()" class="btn-post">دخول</button>
     </div>
 
-    <div id="radarDashboard" class="container" style="display: none; padding: 40px 0;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
-            <h2 style="color: var(--main-blue);"><i class="fas fa-cloud-upload-alt"></i> إضافة خبر للميدان السحابي</h2>
-            <button onclick="location.reload()" style="background: #ddd; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">خروج</button>
+    <div id="radarDashboard" class="container" style="display: none; padding: 30px 0;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+            <h2><i class="fas fa-edit"></i> إضافة خبر جديد</h2>
+            <button onclick="location.href='index.html'" style="background:var(--main-blue); color:white; border:none; padding:8px 15px; border-radius:5px; cursor:pointer;">العودة للرئيسية</button>
         </div>
 
         <div class="admin-panel">
             <div class="input-group">
-                <label>عنوان الخبر الرئيسي:</label>
-                <input type="text" id="newsTitle" placeholder="اكتب عنواناً جذاباً وقوياً...">
+                <label>العنوان:</label>
+                <input type="text" id="newsTitle" placeholder="عنوان الخبر...">
             </div>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                 <div class="input-group">
-                    <label>تصنيف الخبر:</label>
+                    <label>القسم:</label>
                     <select id="newsCategory">
-                        <option value="أخبار العالم">أخبار العالم</option>
                         <option value="عاجل">عاجل</option>
+                        <option value="أخبار العالم">أخبار العالم</option>
                         <option value="سياسة">سياسة</option>
-                        <option value="تكنولوجيا">تكنولوجيا</option>
-                        <option value="ميداني">ميداني</option>
+                        <option value="رياضة">رياضة</option>
                     </select>
                 </div>
                 <div class="input-group">
-                    <label>الصورة (من الاستوديو):</label>
-                    <input type="file" id="imageInput" accept="image/*" style="border: none; background: #f9f9f9;">
+                    <label>الصورة (اختياري):</label>
+                    <input type="file" id="imageInput" accept="image/*">
                 </div>
             </div>
 
-            <div id="previewWrap" style="display:none; margin-bottom: 20px;">
-                <p style="font-size: 0.8rem; color: #888;">معاينة الصورة المختارة:</p>
-                <img id="previewImg" style="width: 200px; height: 120px; object-fit: cover; border-radius: 8px; border: 2px solid var(--main-blue);">
-            </div>
-
             <div class="input-group">
-                <label>نص الخبر التفصيلي:</label>
-                <textarea id="newsContent" rows="8" placeholder="اكتب تفاصيل الخبر كاملة هنا..."></textarea>
+                <label>نص الخبر:</label>
+                <textarea id="newsContent" rows="5" placeholder="تفاصيل الخبر..."></textarea>
             </div>
 
-            <button onclick="publishToRadar()" class="btn-post" id="publishBtn">
-                <i class="fas fa-upload"></i> نشر الخبر عالمياً الآن
-            </button>
+            <button onclick="publishToRadar()" class="btn-post" id="publishBtn">نشر الخبر الآن</button>
         </div>
+
+        <h3 style="margin-top: 40px; color: var(--main-blue); border-bottom: 2px solid #ddd; padding-bottom: 10px;">
+            <i class="fas fa-tasks"></i> إدارة الأخبار المنشورة
+        </h3>
+        <div id="adminNewsList" style="margin-top: 20px;">
+            </div>
     </div>
 
     <script>
-        // إعدادات Firebase الخاصة بك
         const firebaseConfig = {
             databaseURL: "https://radar24lb-972bb-default-rtdb.europe-west1.firebasedatabase.app/"
         };
@@ -75,19 +70,11 @@
         const db = firebase.database();
 
         function unlockRadar() {
-            // كلمة السر الخاصة بك
             if(document.getElementById('adminPass').value === "hassan@123456789") {
                 document.getElementById('loginGate').style.display = 'none';
                 document.getElementById('radarDashboard').style.display = 'block';
-            } else { alert("كلمة السر خاطئة!"); }
-        }
-
-        document.getElementById('imageInput').onchange = function(evt) {
-            const [file] = evt.target.files;
-            if (file) {
-                document.getElementById('previewImg').src = URL.createObjectURL(file);
-                document.getElementById('previewWrap').style.display = 'block';
-            }
+                loadAdminNews(); // جلب الأخبار عند الدخول
+            } else { alert("خطأ!"); }
         }
 
         function publishToRadar() {
@@ -97,33 +84,57 @@
             const imageFile = document.getElementById('imageInput').files[0];
             const time = new Date().toLocaleString('ar-EG', { hour: 'numeric', minute: 'numeric', day: 'numeric', month: 'long' });
 
-            if(!title || !imageFile || !text) {
-                alert("برجاء إكمال جميع البيانات!");
-                return;
-            }
+            if(!title || !text) { alert("أكمل البيانات!"); return; }
 
             const btn = document.getElementById('publishBtn');
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الرفع للسحابة...';
             btn.disabled = true;
+            btn.innerText = "جاري النشر...";
 
-            const reader = new FileReader();
-            reader.onloadend = function() {
-                const base64Image = reader.result;
-                const newEntry = { title, category, image: base64Image, text, time };
-                
-                // إرسال البيانات إلى Firebase
-                db.ref('allNews').push(newEntry)
-                .then(() => {
-                    alert("تم نشر الخبر بنجاح ووصل لجميع المتابعين!");
-                    location.reload();
-                })
-                .catch((error) => {
-                    alert("حدث خطأ في السحابة: " + error.message);
-                    btn.disabled = false;
-                    btn.innerHTML = '<i class="fas fa-upload"></i> نشر الخبر في الرادار الآن';
-                });
+            if (imageFile) {
+                const reader = new FileReader();
+                reader.onloadend = () => sendToFirebase({ title, category, text, time, image: reader.result });
+                reader.readAsDataURL(imageFile);
+            } else {
+                sendToFirebase({ title, category, text, time, image: "" });
             }
-            reader.readAsDataURL(imageFile);
+        }
+
+        function sendToFirebase(data) {
+            db.ref('allNews').push(data).then(() => {
+                alert("تم النشر!");
+                location.reload();
+            });
+        }
+
+        // جلب الأخبار مع زر الحذف
+        function loadAdminNews() {
+            const listDiv = document.getElementById('adminNewsList');
+            db.ref('allNews').on('value', (snapshot) => {
+                const data = snapshot.val();
+                listDiv.innerHTML = '';
+                if (!data) return;
+
+                Object.keys(data).reverse().forEach(id => {
+                    const news = data[id];
+                    listDiv.innerHTML += `
+                        <div style="background:white; padding:15px; border-radius:8px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 2px 5px rgba(0,0,0,0.05);">
+                            <div>
+                                <strong>${news.title}</strong> <br>
+                                <small style="color:#888;">${news.time} | ${news.category}</small>
+                            </div>
+                            <button onclick="deleteNews('${id}')" style="background:#ff4444; color:white; border:none; padding:8px 12px; border-radius:5px; cursor:pointer;">
+                                <i class="fas fa-trash"></i> حذف
+                            </button>
+                        </div>
+                    `;
+                });
+            });
+        }
+
+        function deleteNews(id) {
+            if(confirm("هل أنت متأكد من حذف هذا الخبر؟")) {
+                db.ref('allNews').child(id).remove().then(() => alert("تم الحذف!"));
+            }
         }
     </script>
 </body>
