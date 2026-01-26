@@ -29,9 +29,9 @@
 
     <div class="ticker-wrap">
         <div class="ticker-title">عاجل</div>
-        <marquee id="breakingTicker" behavior="scroll" direction="right" scrollamount="6">
-            جاري تحميل آخر التحديثات من رادار 24...
-        </marquee>
+        <div class="ticker-content" id="breakingTicker">
+            <span>جاري تحميل التحديثات...</span>
+        </div>
     </div>
 
     <main class="container" style="margin-top: 30px;">
@@ -40,14 +40,14 @@
         </h2>
         
         <div class="news-grid" id="newsContainer">
-            </div>
+        </div>
     </main>
 
     <div id="newsModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal()">&times;</span>
             <div id="modalBody">
-                </div>
+            </div>
         </div>
     </div>
 
@@ -68,7 +68,6 @@
 
         let allNewsData = [];
 
-        // جلب الأخبار وتحديث الشريط العاجل
         db.ref('allNews').on('value', (snapshot) => {
             const data = snapshot.val();
             if (!data) return;
@@ -76,9 +75,14 @@
             allNewsData = Object.values(data).reverse();
             displayNews(allNewsData);
 
-            // تحديث شريط العاجل بآخر 5 عناوين
-            const breaking = allNewsData.slice(0, 5).map(n => n.title).join(' --- ');
-            document.getElementById('breakingTicker').innerText = breaking;
+            // تجهيز النص العاجل
+            const breakingText = allNewsData.slice(0, 10).map(n => n.title).join('  • • •  ');
+            
+            // نكرر النص مرتين لضمان أن الشريط لا يفرغ أبداً (تم التعديل بناءً على طلبك)
+            const tickerElement = document.getElementById('breakingTicker');
+            if(tickerElement) {
+                tickerElement.innerHTML = `<span>${breakingText}</span><span>${breakingText}</span>`;
+            }
         });
 
         function displayNews(newsList) {
@@ -86,7 +90,6 @@
             container.innerHTML = '';
 
             newsList.forEach((news, index) => {
-                // التحقق مما إذا كان هناك صورة أم لا
                 const imageHtml = news.image ? `<div class="card-img-wrap"><img src="${news.image}"></div>` : '';
                 
                 container.innerHTML += `
@@ -105,11 +108,9 @@
             });
         }
 
-        // نظام الفلترة
         function filterNews(category) {
-            document.getElementById('sectionTitle').innerText = category === 'الكل' ? 'تغطية حصرية مباشرة' : category;
+            document.getElementById('sectionTitle').innerText = category === 'الكل' ? 'حيث كان الحدث كان Radar24 أول الحاضرين' : category;
             
-            // تغيير الـ Active في القائمة
             const links = document.querySelectorAll('#mainNav a');
             links.forEach(link => link.classList.remove('active'));
             event.target.classList.add('active');
@@ -122,7 +123,6 @@
             }
         }
 
-        // فتح الخبر بالكامل
         function openNews(index) {
             const news = allNewsData[index];
             const modalBody = document.getElementById('modalBody');
@@ -143,7 +143,6 @@
             document.getElementById('newsModal').style.display = 'none';
         }
 
-        // إغلاق النافذة عند الضغط خارجها
         window.onclick = function(event) {
             if (event.target == document.getElementById('newsModal')) closeModal();
         }
