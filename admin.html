@@ -6,106 +6,106 @@
     <title>حجرة القيادة | رادار 24</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
 </head>
 <body style="background: #eef2f7;">
 
     <div id="loginGate" class="admin-login-wrapper">
-        <div style="font-size: 3rem; color: var(--main-blue); margin-bottom: 20px;"><i class="fas fa-user-shield"></i></div>
-        <h2 style="color: var(--main-blue);">دخول الإدارة</h2>
-        <p style="margin-bottom: 20px; color: #666;">شبكة رادار 24 الإخبارية</p>
-        <input type="password" id="adminPass" placeholder="أدخل كلمة السر" style="width:100%; padding:12px; border:1px solid #ccc; border-radius:6px; margin-bottom:15px; text-align: center;">
+        <i class="fas fa-lock-open" style="font-size: 3rem; color: var(--main-blue); margin-bottom: 15px;"></i>
+        <h2 style="color: var(--main-blue);">بوابة الناشرين</h2>
+        <p style="color: #666; margin-bottom: 25px;">يرجى إثبات الهوية للوصول للرادار</p>
+        <input type="password" id="adminPass" placeholder="كلمة المرور السرية" style="width:100%; padding:15px; border-radius:10px; border:1px solid #ddd; text-align: center; font-size: 1.1rem; margin-bottom: 20px;">
         <button onclick="unlockRadar()" class="btn-post">دخول النظام</button>
     </div>
 
-    <div id="radarDashboard" class="container" style="display: none; margin-top: 50px; max-width: 700px;">
-        <div class="admin-panel" style="background: white; padding: 30px; border-radius: 12px; box-shadow: var(--shadow);">
-            <h2 style="color: var(--main-blue); border-bottom: 2px solid var(--radar-red); padding-bottom: 10px; margin-bottom: 25px;">
-                <i class="fas fa-plus-circle"></i> نشر خبر جديد
-            </h2>
-            
+    <div id="radarDashboard" class="container" style="display: none; padding: 40px 0;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+            <h2 style="color: var(--main-blue);"><i class="fas fa-plus-circle"></i> إضافة خبر للميدان</h2>
+            <button onclick="location.reload()" style="background: #ddd; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">خروج</button>
+        </div>
+
+        <div class="admin-panel">
             <div class="input-group">
-                <label><i class="fas fa-font"></i> عنوان الخبر:</label>
-                <input type="text" id="newsTitle" placeholder="مثلاً: عاجل.. حدث هام في العاصمة">
+                <label>عنوان الخبر الرئيسي:</label>
+                <input type="text" id="newsTitle" placeholder="اكتب عنواناً جذاباً وقوياً...">
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div class="input-group">
+                    <label>تصنيف الخبر:</label>
+                    <select id="newsCategory">
+                        <option value="أخبار العالم">أخبار العالم</option>
+                        <option value="عاجل">عاجل</option>
+                        <option value="سياسة">سياسة</option>
+                        <option value="تكنولوجيا">تكنولوجيا</option>
+                        <option value="ميداني">ميداني</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>الصورة (من الاستوديو):</label>
+                    <input type="file" id="imageInput" accept="image/*" style="border: none; background: #f9f9f9;">
+                </div>
+            </div>
+
+            <div id="previewWrap" style="display:none; margin-bottom: 20px;">
+                <p style="font-size: 0.8rem; color: #888;">معاينة الصورة المختارة:</p>
+                <img id="previewImg" style="width: 200px; height: 120px; object-fit: cover; border-radius: 8px; border: 2px solid var(--main-blue);">
             </div>
 
             <div class="input-group">
-                <label><i class="fas fa-list"></i> تصنيف القسم:</label>
-                <select id="newsCategory">
-                    <option value="أخبار العالم">أخبار العالم</option>
-                    <option value="عاجل">عاجل</option>
-                    <li><option value="سياسة">سياسة</option></li>
-                    <option value="تكنولوجيا">تكنولوجيا</option>
-                </select>
+                <label>نص الخبر التفصيلي:</label>
+                <textarea id="newsContent" rows="8" placeholder="اكتب تفاصيل الخبر كاملة هنا..."></textarea>
             </div>
 
-            <div class="input-group">
-                <label><i class="fas fa-image"></i> رابط صورة الخبر (URL):</label>
-                <input type="text" id="newsImg" placeholder="انسخ رابط أي صورة من الإنترنت وضعه هنا">
-            </div>
-
-            <div class="input-group">
-                <label><i class="fas fa-align-right"></i> تفاصيل الخبر:</label>
-                <textarea id="newsContent" rows="6" placeholder="اكتب تفاصيل الخبر هنا..."></textarea>
-            </div>
-
-            <button onclick="publishToRadar()" class="btn-post" style="font-size: 1.1rem;">
-                <i class="fas fa-paper-plane"></i> إرسال إلى الصفحة الرئيسية
-            </button>
-            
-            <button onclick="clearAllNews()" style="margin-top: 20px; background: none; border: none; color: gray; cursor: pointer; font-size: 0.8rem;">
-                <i class="fas fa-trash"></i> مسح جميع الأخبار القديمة
+            <button onclick="publishToRadar()" class="btn-post" id="publishBtn">
+                <i class="fas fa-upload"></i> نشر الخبر في الرادار الآن
             </button>
         </div>
     </div>
 
     <script>
-        // دالة الدخول
         function unlockRadar() {
-            const pass = document.getElementById('adminPass').value;
-            if(pass === "PRO_NWES_2026") {
+            if(document.getElementById('adminPass').value === "PRO_NEWES_2026") {
                 document.getElementById('loginGate').style.display = 'none';
                 document.getElementById('radarDashboard').style.display = 'block';
-            } else {
-                alert("كلمة السر خاطئة! حاول مجدداً.");
+            } else { alert("كلمة السر خاطئة!"); }
+        }
+
+        document.getElementById('imageInput').onchange = function(evt) {
+            const [file] = evt.target.files;
+            if (file) {
+                document.getElementById('previewImg').src = URL.createObjectURL(file);
+                document.getElementById('previewWrap').style.display = 'block';
             }
         }
 
-        // دالة حفظ الخبر
         function publishToRadar() {
             const title = document.getElementById('newsTitle').value;
             const category = document.getElementById('newsCategory').value;
-            const image = document.getElementById('newsImg').value || "https://via.placeholder.com/400x250";
             const text = document.getElementById('newsContent').value;
+            const imageFile = document.getElementById('imageInput').files[0];
             const time = new Date().toLocaleString('ar-EG', { hour: 'numeric', minute: 'numeric', day: 'numeric', month: 'long' });
 
-            if(!title || !text) {
-                alert("يرجى ملء العنوان وتفاصيل الخبر!");
+            if(!title || !imageFile || !text) {
+                alert("برجاء إكمال جميع البيانات (العنوان، الصورة، النص)!");
                 return;
             }
 
-            const newEntry = { title, category, image, text, time };
+            document.getElementById('publishBtn').innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري النشر...';
 
-            // جلب الأخبار الحالية من التخزين
-            let database = JSON.parse(localStorage.getItem('radar_news')) || [];
-            database.push(newEntry);
+            const reader = new FileReader();
+            reader.onloadend = function() {
+                const base64Image = reader.result;
+                const newEntry = { title, category, image: base64Image, text, time };
+                
+                let database = JSON.parse(localStorage.getItem('radar_news')) || [];
+                database.push(newEntry);
+                localStorage.setItem('radar_news', JSON.stringify(database));
 
-            // حفظ البيانات مجدداً
-            localStorage.setItem('radar_news', JSON.stringify(database));
-
-            alert("تم النشر بنجاح! انتقل للصفحة الرئيسية لرؤية الخبر.");
-            
-            // تفريغ الحقول بعد النشر
-            document.getElementById('newsTitle').value = '';
-            document.getElementById('newsContent').value = '';
-            document.getElementById('newsImg').value = '';
-        }
-
-        // مسح الأرشيف
-        function clearAllNews() {
-            if(confirm("هل أنت متأكد من مسح جميع الأخبار؟")) {
-                localStorage.removeItem('radar_news');
-                alert("تم تنظيف الأرشيف.");
+                alert("تم إرسال الخبر للرئيسية بنجاح!");
+                location.reload();
             }
+            reader.readAsDataURL(imageFile);
         }
     </script>
 </body>
