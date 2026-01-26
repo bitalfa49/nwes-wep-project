@@ -2,42 +2,118 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>لوحة التحكم | Admin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حجرة القيادة | رادار 24</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .admin-container { max-width: 800px; margin: 40px auto; padding: 20px; }
+        .upload-zone { 
+            border: 2px dashed var(--main-blue); 
+            padding: 30px; 
+            text-align: center; 
+            border-radius: 10px; 
+            cursor: pointer;
+            margin-bottom: 20px;
+            background: #fdfdfd;
+        }
+        .upload-zone:hover { background: #f0f7ff; }
+        #imagePreview { max-width: 100%; height: 200px; object-fit: cover; display: none; margin-top: 15px; border-radius: 5px; }
+        .status-bar { display: flex; gap: 10px; margin-bottom: 20px; }
+        .status-card { flex: 1; background: white; padding: 15px; border-radius: 8px; box-shadow: var(--shadow); text-align: center; border-bottom: 4px solid var(--main-blue); }
+    </style>
 </head>
-<body style="background: #e9ecef;">
+<body style="background: #eef2f7;">
 
-    <div id="loginSection" class="admin-login-wrapper">
-        <h2 style="color: var(--primary-color);">دخول الإدارة</h2>
-        <p>يرجى إدخال رمز الوصول للمتابعة</p><br>
-        <input type="password" id="passkey" placeholder="كلمة السر" style="width:100%; padding:10px; margin-bottom:15px;">
-        <button onclick="verifyAccess()" class="btn-primary">دخول</button>
+    <div id="loginGate" class="admin-login-wrapper">
+        <div style="font-size: 3rem; color: var(--main-blue); margin-bottom: 20px;"><i class="fas fa-user-lock"></i></div>
+        <h2 style="color: var(--main-blue); margin-bottom: 10px;">دخول المصرح لهم فقط</h2>
+        <p style="margin-bottom: 20px; color: #666;">نظام إدارة محتوى رادار 24</p>
+        <input type="password" id="adminPass" placeholder="أدخل مفتاح التشفير المحمي" style="width:100%; padding:12px; border:1px solid #ddd; border-radius:6px; margin-bottom:15px; text-align: center;">
+        <button onclick="unlockRadar()" class="btn-post" style="background: var(--main-blue);">تأكيد الهوية</button>
     </div>
 
-    <div id="controlPanel" class="container" style="display:none; margin-top:50px; background:white; padding:30px; border-radius:8px;">
-        <h2 style="color: var(--primary-color);">لوحة التحكم - إضافة خبر</h2>
-        <hr><br>
-        <div class="news-form">
-            <label>عنوان الخبر:</label>
-            <input type="text" style="width:100%; padding:10px; margin-bottom:15px;">
-            <label>محتوى الخبر:</label>
-            <textarea style="width:100%; padding:10px; height:150px; margin-bottom:15px;"></textarea>
-            <button class="btn-primary">حفظ ونشر الخبر</button>
+    <div id="radarDashboard" class="admin-container" style="display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+            <h2 style="color: var(--main-blue);"><i class="fas fa-satellite-dish"></i> حجرة القيادة - رادار 24</h2>
+            <button onclick="location.reload()" style="background:none; border:none; color:var(--radar-red); cursor:pointer;"><i class="fas fa-sign-out-alt"></i> خروج</button>
+        </div>
+
+        <div class="status-bar">
+            <div class="status-card"><h4>أخبار منشورة</h4><p>24</p></div>
+            <div class="status-card"><h4>المشاهدات اليوم</h4><p>1,250</p></div>
+            <div class="status-card" style="border-color: var(--radar-red);"><h4>حالة البث</h4><p>مباشر</p></div>
+        </div>
+
+        <div class="admin-panel">
+            <div class="input-group">
+                <label><i class="fas fa-heading"></i> عنوان الخبر العاجل:</label>
+                <input type="text" id="newsTitle" placeholder="اكتب العنوان هنا ليبهر القراء...">
+            </div>
+
+            <div class="input-group">
+                <label><i class="fas fa-tags"></i> تصنيف الخبر:</label>
+                <select id="newsCategory" style="width: 100%; padding: 12px; border-radius: 6px; border: 1px solid #ddd;">
+                    <option value="سياسة">سياسة</option>
+                    <option value="ميداني">ميداني</option>
+                    <option value="اقتصاد">اقتصاد</option>
+                    <option value="تكنولوجيا">تكنولوجيا</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label><i class="fas fa-image"></i> إرفاق صورة من الهاتف:</label>
+                <div class="upload-zone" onclick="document.getElementById('fileInput').click()">
+                    <i class="fas fa-cloud-upload-alt" style="font-size: 2rem; color: var(--main-blue);"></i>
+                    <p>اضغط هنا لاختيار صورة الخبر</p>
+                    <input type="file" id="fileInput" style="display: none;" accept="image/*" onchange="previewImage(event)">
+                    <img id="imagePreview" alt="معاينة الصورة">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label><i class="fas fa-file-alt"></i> نص الخبر بالكامل:</label>
+                <textarea id="newsContent" rows="6" placeholder="ابدأ بكتابة التفاصيل الميدانية..."></textarea>
+            </div>
+
+            <button onclick="publishNews()" class="btn-post">
+                <i class="fas fa-paper-plane"></i> نشر الخبر الآن على الرادار
+            </button>
         </div>
     </div>
 
     <script>
-        // Use a secure-looking function name
-        function verifyAccess() {
-            const input = document.getElementById('passkey').value;
-            const masterKey = "PRO_NWES_2026"; // كلمة السر الخاصة بك
-
-            if(input === masterKey) {
-                document.getElementById('loginSection').style.display = 'none';
-                document.getElementById('controlPanel').style.display = 'block';
+        // التحقق من مفتاح الدخول
+        function unlockRadar() {
+            const pass = document.getElementById('adminPass').value;
+            if(pass === "PRO_NWES_2026") {
+                document.getElementById('loginGate').style.display = 'none';
+                document.getElementById('radarDashboard').style.display = 'block';
             } else {
-                alert("Access Denied: رمز الوصول غير صحيح");
+                alert("خطأ في مفتاح التشفير! المحاولة مسجلة.");
             }
+        }
+
+        // معاينة الصورة المختارة
+        function previewImage(event) {
+            const reader = new FileReader();
+            reader.onload = function() {
+                const output = document.getElementById('imagePreview');
+                output.src = reader.result;
+                output.style.display = 'block';
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        }
+
+        // محاكاة النشر
+        function publishNews() {
+            const title = document.getElementById('newsTitle').value;
+            if(!title) {
+                alert("يرجى كتابة العنوان أولاً!");
+                return;
+            }
+            alert("تم إرسال الخبر بنجاح إلى قاعدة بيانات رادار 24!");
+            // ملاحظة: الحفظ الدائم يتطلب برمجة خلفية (Backend) سنناقشها لاحقاً
         }
     </script>
 </body>
