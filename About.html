@@ -3,28 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>من نحن</title>
-    <link rel="stylesheet" href="../style.css">
+    <title>من نحن | رادار 24</title>
+    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <nav class="navbar">
-        <div class="logo">موقعي</div>
-        <ul class="nav-links">
-            <li><a href="../index.html"><i class="fas fa-home"></i> الرئيسية</a></li>
-            <li><a href="about.html"><i class="fas fa-info-circle"></i> من نحن</a></li>
-            <li><a href="contact.html"><i class="fas fa-envelope"></i> اتصل بنا</a></li>
-        </ul>
-        <button class="menu-btn">
-            <i class="fas fa-bars"></i>
-        </button>
+    <nav class="main-header">
+        <div class="header-flex">
+            <div class="logo"><span>رادار</span> 24</div>
+            <ul style="display:flex; list-style:none;">
+                <li><a href="index.html" style="color:white; text-decoration:none; margin-left:15px;"><i class="fas fa-home"></i> الرئيسية</a></li>
+            </ul>
+        </div>
     </nav>
     
-    <main class="container">
-        <h1>من نحن</h1>
-        <p>نحن فريق من المطورين المتحمسين لإنشاء مواقع ويب رائعة عبر الهواتف الذكية!</p>
+    <main class="container" style="margin-top: 50px; background: white; padding: 40px; border-radius: 10px; box-shadow: var(--shadow);">
+        <h1 style="color: var(--main-blue); margin-bottom: 20px; border-bottom: 3px solid var(--radar-red); display: inline-block;">عن شبكة رادار 24</h1>
+        <p style="font-size: 1.2rem; color: #444; margin-top: 20px;">
+            **رادار 24** هي منصة إخبارية مستقلة تهدف إلى تقديم الخبر من قلب الحدث بدقة وموضوعية. نحن نعتمد على أحدث التقنيات البرمجية لنقل الصورة والخبر بأسرع وقت ممكن إلى جمهورنا العربي حول العالم.
+        </p>
+        <div style="margin-top: 30px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <div style="background: var(--light-gray); padding: 20px; border-radius: 8px;">
+                <h3 style="color: var(--radar-red);"><i class="fas fa-eye"></i> رؤيتنا</h3>
+                <p>أن نكون المصدر الأول للخبر العاجل والموثوق في المنطقة.</p>
+            </div>
+            <div style="background: var(--light-gray); padding: 20px; border-radius: 8px;">
+                <h3 style="color: var(--main-blue);"><i class="fas fa-bullseye"></i> مهمتنا</h3>
+                <p>تمكين القارئ من الوصول إلى الحقيقة عبر تغطية ميدانية وتقنية شاملة.</p>
+            </div>
+        </div>
     </main>
     
-    <script src="../script.js"></script>
+    <footer style="text-align:center; margin-top:50px; padding:20px; color:#666;">
+        <p>© 2026 رادار 24 الإخبارية</p>
+    </footer>
 </body>
 </html>
