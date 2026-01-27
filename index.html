@@ -85,13 +85,23 @@
             if (!data) return;
             allNewsData = Object.values(data).reverse();
             displayNews(allNewsData);
-            const latestNews = allNewsData[0].title;
-            const separator = '<span style="display:inline-block; width:80px; height:8px; background-color:var(--main-blue); margin: 0 40px; vertical-align:middle; border-radius:4px;"></span>';
+            
             const tickerElement = document.getElementById('breakingTicker');
+            const separator = '<span style="display:inline-block; width:80px; height:8px; background-color:var(--main-blue); margin: 0 40px; vertical-align:middle; border-radius:4px;"></span>';
+
+            const breakingNews = allNewsData.filter(news => news.category === "عاجل");
+
             if(tickerElement) {
-                tickerElement.innerHTML = `<span>${latestNews}</span>${separator}<span>${latestNews}</span>${separator}`;
+                if (breakingNews.length > 0) {
+                    // نأخذ عنوان أول خبر عاجل فقط
+                    const latestOne = breakingNews[0].title;
+                    tickerElement.innerHTML = `<span>${latestOne}</span>${separator}<span>${latestOne}</span>${separator}`;
+                } else {
+                    tickerElement.innerHTML = "<span>لا يوجد أخبار عاجلة حالياً</span>";
+                }
             }
         });
+
 
         // جلب وترتيب الداعمين تلقائياً
         db.ref('supporters').on('value', (snapshot) => {
