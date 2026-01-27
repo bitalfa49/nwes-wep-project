@@ -62,7 +62,7 @@ nav ul li a:hover, nav ul li a.active { color: #ffcc00; border-bottom: 2px solid
     position: absolute; 
     left: 0; 
     
-    animation: ticker-loop 40s linear infinite; 
+    animation: ticker-loop 20s linear infinite; 
 }
 
 .ticker-content span {
