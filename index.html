@@ -20,6 +20,7 @@
                     <li><a href="#" class="active" onclick="filterNews('الكل')">الرئيسية</a></li>
                     <li><a href="#" onclick="filterNews('أخبار العالم')">أخبار العالم</a></li>
                     <li><a href="#" onclick="filterNews('عاجل')">عاجل</a></li>
+                    <li><a href="#supportersSection" style="color: #D4AF37;"><i class="fas fa-crown"></i> الداعمين</a></li>
                     <li><a href="about.html">من نحن</a></li>
                     <li><a href="admin.html" style="color: #ffcc00;"><i class="fas fa-user-shield"></i> الإدارة</a></li>
                 </ul>
@@ -41,6 +42,21 @@
         
         <div class="news-grid" id="newsContainer">
         </div>
+
+        <section id="supportersSection" style="margin-top: 60px; padding: 40px 20px; background: linear-gradient(145deg, #001f3f, #002b5b); border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.3); border: 2px solid #D4AF37;">
+            <div style="text-align: center; margin-bottom: 40px;">
+                <h2 style="color: #D4AF37; font-size: 2rem; font-weight: 900; text-shadow: 0 2px 10px rgba(212,175,55,0.4);">
+                    <i class="fas fa-gem"></i> لوحة شرف داعمي رادار 24
+                </h2>
+                <p style="color: #eee; margin-top: 10px;">نعتز بنخبة الداعمين الذين يساهمون في استمرار رسالتنا الإخبارية</p>
+                <a href="https://wtsi.me/96179359482" target="_blank" style="display: inline-block; margin-top: 20px; padding: 10px 25px; background: #25d366; color: white; border-radius: 50px; text-decoration: none; font-weight: bold; font-size: 0.9rem; box-shadow: 0 4px 15px rgba(37,211,102,0.3);">
+                    <i class="fab fa-whatsapp"></i> تواصل معنا لتكون ضمن الداعمين
+                </a>
+            </div>
+
+            <div id="supportersContainer" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 25px; justify-items: center;">
+                </div>
+        </section>
     </main>
 
     <div id="newsModal" class="modal">
@@ -67,27 +83,59 @@
         db.ref('allNews').on('value', (snapshot) => {
             const data = snapshot.val();
             if (!data) return;
-            
             allNewsData = Object.values(data).reverse();
             displayNews(allNewsData);
-
             const latestNews = allNewsData[0].title;
-            
             const separator = '<span style="display:inline-block; width:80px; height:8px; background-color:var(--main-blue); margin: 0 40px; vertical-align:middle; border-radius:4px;"></span>';
-            
             const tickerElement = document.getElementById('breakingTicker');
             if(tickerElement) {
                 tickerElement.innerHTML = `<span>${latestNews}</span>${separator}<span>${latestNews}</span>${separator}`;
             }
         });
 
+        // جلب وترتيب الداعمين تلقائياً
+        db.ref('supporters').on('value', (snapshot) => {
+            const container = document.getElementById('supportersContainer');
+            container.innerHTML = '';
+            const data = snapshot.val();
+            if (!data) return;
+
+            // تحويل الكائن لمصفوفة وترتيبها من الأعلى مبلغاً إلى الأقل
+            const list = Object.values(data).sort((a, b) => b.amount - a.amount);
+
+            list.forEach((sup, index) => {
+                let borderStyle = "border: 2px solid #ddd;";
+                let crown = "";
+                let glow = "";
+                
+                if(index === 0) { // المركز الأول - ذهبي
+                    borderStyle = "border: 4px solid #D4AF37; transform: scale(1.1);";
+                    crown = '<i class="fas fa-crown" style="color:#D4AF37; position:absolute; top:-20px; font-size:1.5rem;"></i>';
+                    glow = "box-shadow: 0 0 20px rgba(212,175,55,0.6);";
+                } else if(index === 1) { // المركز الثاني - فضي
+                    borderStyle = "border: 3px solid #C0C0C0;";
+                    crown = '<i class="fas fa-medal" style="color:#C0C0C0; position:absolute; top:-15px;"></i>';
+                }
+
+                const displayAmount = sup.privacy === 'hide' ? '***' : `${sup.amount}$`;
+                const userImg = sup.image || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png';
+
+                container.innerHTML += `
+                    <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 15px; text-align: center; position: relative; width: 180px; transition: 0.3s; ${borderStyle} ${glow}">
+                        ${crown}
+                        <img src="${userImg}" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; margin-bottom: 15px; border: 2px solid #fff;">
+                        <h4 style="color: white; font-size: 1rem; margin-bottom: 5px;">${sup.name}</h4>
+                        <div style="color: #D4AF37; font-weight: bold; font-size: 1.1rem;">${displayAmount}</div>
+                    </div>
+                `;
+            });
+        });
+
         function displayNews(newsList) {
             const container = document.getElementById('newsContainer');
             container.innerHTML = '';
-
             newsList.forEach((news, index) => {
                 const imageHtml = news.image ? `<div class="card-img-wrap"><img src="${news.image}"></div>` : '';
-                
                 container.innerHTML += `
                     <article class="news-card">
                         <span class="badge-cat">${news.category}</span>
@@ -106,11 +154,9 @@
 
         function filterNews(category) {
             document.getElementById('sectionTitle').innerText = category === 'الكل' ? 'حيث كان الحدث كان Radar24 أول الحاضرين' : category;
-            
             const links = document.querySelectorAll('#mainNav a');
             links.forEach(link => link.classList.remove('active'));
-            event.target.classList.add('active');
-
+            if(event) event.target.classList.add('active');
             if (category === 'الكل') {
                 displayNews(allNewsData);
             } else {
@@ -123,7 +169,6 @@
             const news = allNewsData[index];
             const modalBody = document.getElementById('modalBody');
             const imageHtml = news.image ? `<img src="${news.image}" style="width:100%; border-radius:10px; margin-bottom:15px;">` : '';
-
             modalBody.innerHTML = `
                 ${imageHtml}
                 <span class="badge-cat" style="position:static; margin-bottom:10px; display:inline-block;">${news.category}</span>
