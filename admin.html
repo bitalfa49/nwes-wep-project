@@ -55,11 +55,41 @@
             <button onclick="publishToRadar()" class="btn-post" id="publishBtn">نشر الخبر الآن</button>
         </div>
 
-        <h3 style="margin-top: 40px; color: var(--main-blue); border-bottom: 2px solid #ddd; padding-bottom: 10px;">
-            <i class="fas fa-tasks"></i> إدارة الأخبار المنشورة
+        <h3 style="margin-top: 40px; color: #D4AF37; border-bottom: 2px solid #D4AF37; padding-bottom: 10px;">
+            <i class="fas fa-crown"></i> إضافة داعم للموقع
         </h3>
-        <div id="adminNewsList" style="margin-top: 20px;">
+        <div class="admin-panel" style="border: 2px solid #D4AF37; margin-top: 20px;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div class="input-group">
+                    <label>اسم الداعم:</label>
+                    <input type="text" id="supporterName" placeholder="الاسم الكامل">
+                </div>
+                <div class="input-group">
+                    <label>المبلغ (للترتيب التلقائي):</label>
+                    <input type="number" id="supporterAmount" placeholder="مثال: 100">
+                </div>
             </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div class="input-group">
+                    <label>صورة الداعم (اختياري):</label>
+                    <input type="file" id="supporterImage" accept="image/*">
+                </div>
+                <div class="input-group">
+                    <label>خصوصية المبلغ:</label>
+                    <select id="amountPrivacy">
+                        <option value="show">إظهار المبلغ</option>
+                        <option value="hide">إخفاء (وضع نجوم ***)</option>
+                    </select>
+                </div>
+            </div>
+            <button onclick="addSupporter()" class="btn-post" style="background: #D4AF37;">إضافة الداعم للوحة الشرف</button>
+        </div>
+
+        <h3 style="margin-top: 40px; color: var(--main-blue); border-bottom: 2px solid #ddd; padding-bottom: 10px;">
+            <i class="fas fa-tasks"></i> إدارة المحتوى المنشور
+        </h3>
+        <div id="adminNewsList" style="margin-top: 20px;"></div>
+        <div id="adminSupportersList" style="margin-top: 20px; border-top: 2px dashed #D4AF37; padding-top: 20px;"></div>
     </div>
 
     <script>
@@ -73,7 +103,8 @@
             if(document.getElementById('adminPass').value === "hassan@123456789") {
                 document.getElementById('loginGate').style.display = 'none';
                 document.getElementById('radarDashboard').style.display = 'block';
-                loadAdminNews(); // جلب الأخبار عند الدخول
+                loadAdminNews(); 
+                loadAdminSupporters();
             } else { alert("خطأ!"); }
         }
 
@@ -106,34 +137,62 @@
             });
         }
 
-        // جلب الأخبار مع زر الحذف
+        function addSupporter() {
+            const name = document.getElementById('supporterName').value;
+            const amount = parseFloat(document.getElementById('supporterAmount').value) || 0;
+            const privacy = document.getElementById('amountPrivacy').value;
+            const imageFile = document.getElementById('supporterImage').files[0];
+
+            if(!name) { alert("أدخل اسم الداعم!"); return; }
+
+            if (imageFile) {
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    db.ref('supporters').push({ name, amount, privacy, image: reader.result }).then(() => location.reload());
+                };
+                reader.readAsDataURL(imageFile);
+            } else {
+                db.ref('supporters').push({ name, amount, privacy, image: "" }).then(() => location.reload());
+            }
+        }
+
         function loadAdminNews() {
             const listDiv = document.getElementById('adminNewsList');
             db.ref('allNews').on('value', (snapshot) => {
                 const data = snapshot.val();
-                listDiv.innerHTML = '';
+                listDiv.innerHTML = '<h4>الأخبار:</h4>';
                 if (!data) return;
-
                 Object.keys(data).reverse().forEach(id => {
                     const news = data[id];
                     listDiv.innerHTML += `
-                        <div style="background:white; padding:15px; border-radius:8px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 2px 5px rgba(0,0,0,0.05);">
-                            <div>
-                                <strong>${news.title}</strong> <br>
-                                <small style="color:#888;">${news.time} | ${news.category}</small>
-                            </div>
-                            <button onclick="deleteNews('${id}')" style="background:#ff4444; color:white; border:none; padding:8px 12px; border-radius:5px; cursor:pointer;">
-                                <i class="fas fa-trash"></i> حذف
-                            </button>
-                        </div>
-                    `;
+                        <div style="background:white; padding:15px; border-radius:8px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;">
+                            <div><strong>${news.title}</strong></div>
+                            <button onclick="deleteItem('allNews', '${id}')" style="background:#ff4444; color:white; border:none; padding:8px 12px; border-radius:5px; cursor:pointer;"><i class="fas fa-trash"></i></button>
+                        </div>`;
                 });
             });
         }
 
-        function deleteNews(id) {
-            if(confirm("هل أنت متأكد من حذف هذا الخبر؟")) {
-                db.ref('allNews').child(id).remove().then(() => alert("تم الحذف!"));
+        function loadAdminSupporters() {
+            const listDiv = document.getElementById('adminSupportersList');
+            db.ref('supporters').on('value', (snapshot) => {
+                const data = snapshot.val();
+                listDiv.innerHTML = '<h4>قائمة الداعمين:</h4>';
+                if (!data) return;
+                Object.keys(data).forEach(id => {
+                    const sup = data[id];
+                    listDiv.innerHTML += `
+                        <div style="background:#fff9e6; padding:15px; border-radius:8px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center; border:1px solid #D4AF37;">
+                            <div><strong>${sup.name}</strong> (${sup.amount}$)</div>
+                            <button onclick="deleteItem('supporters', '${id}')" style="background:#ff4444; color:white; border:none; padding:8px 12px; border-radius:5px; cursor:pointer;"><i class="fas fa-trash"></i></button>
+                        </div>`;
+                });
+            });
+        }
+
+        function deleteItem(path, id) {
+            if(confirm("هل أنت متأكد؟")) {
+                db.ref(path).child(id).remove().then(() => alert("تم الحذف"));
             }
         }
     </script>
