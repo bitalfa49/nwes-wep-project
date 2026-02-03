@@ -1,202 +1,383 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="rtl" class="no-js">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>رادار 24 | عينك على الحدث</title>
-    <link rel="stylesheet" href="style.css">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta name="description" content="رادار 24 - الشبكة الإخبارية الأولى، تغطية حية ومباشرة للأحداث العالمية والمحلية بدقة متناهية وسرعة فائقة.">
+    <meta name="keywords" content="أخبار, عاجل, سياسة, اقتصاد, رياضة, رادار 24, لبنان, العالم, تغطية مباشرة">
+    <meta name="author" content="Radar 24 Development Team">
+    <meta name="theme-color" content="#0f172a">
+    
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://radar24.news/">
+    <meta property="og:title" content="رادار 24 | عينك على الحدث - التغطية الشاملة">
+    <meta property="og:description" content="حيث كان الحدث كان Radar24 أول الحاضرين. منصة إخبارية متكاملة.">
+    <meta property="og:image" content="assets/images/og-cover.jpg">
+
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://radar24.news/">
+    <meta property="twitter:title" content="رادار 24 | عينك على الحدث">
+    <meta property="twitter:description" content="التغطية الأقوى للأحداث لحظة بلحظة.">
+    <meta property="twitter:image" content="assets/images/twitter-cover.jpg">
+
+    <title>رادار 24 | البوابة الإخبارية العالمية</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;500;600;700;800;900&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 </head>
-<body>
 
-    <header class="main-header">
-        <div class="container header-flex">
-            <div class="logo"><span>رادار</span> 24</div>
-            <nav>
-                <ul id="mainNav">
-                    <li><a href="#" class="active" onclick="filterNews('الكل')">الرئيسية</a></li>
-                    <li><a href="#" onclick="filterNews('أخبار العالم')">أخبار العالم</a></li>
-                    <li><a href="#" onclick="filterNews('عاجل')">عاجل</a></li>
-                    <li><a href="#supportersSection" style="color: #D4AF37;"><i class="fas fa-crown"></i> الداعمين</a></li>
-                    <li><a href="about.html">من نحن</a></li>
-                    <li><a href="admin.html" style="color: #ffcc00;"><i class="fas fa-user-shield"></i> الإدارة</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
+<body class="loading-state">
 
-    <div class="ticker-wrap">
-        <div class="ticker-title">عاجل</div>
-        <div class="ticker-content" id="breakingTicker">
-            <span>جاري تحميل التحديثات...</span>
+    <!-- Preloader -->
+    <div id="preloader" class="preloader-container">
+        <div class="loader-content">
+            <svg class="radar-pulse" width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="50" cy="50" r="45" fill="none" stroke="#d90429" stroke-width="2" opacity="0.5">
+                    <animate attributeName="r" from="0" to="45" dur="1.5s" repeatCount="indefinite" />
+                    <animate attributeName="opacity" from="1" to="0" dur="1.5s" repeatCount="indefinite" />
+                </circle>
+                <circle cx="50" cy="50" r="30" fill="none" stroke="#d90429" stroke-width="2" opacity="0.5">
+                    <animate attributeName="r" from="0" to="30" dur="1.5s" begin="0.5s" repeatCount="indefinite" />
+                    <animate attributeName="opacity" from="1" to="0" dur="1.5s" begin="0.5s" repeatCount="indefinite" />
+                </circle>
+                <circle cx="50" cy="50" r="10" fill="#002b5b" stroke="none">
+                    <animate attributeName="fill" values="#002b5b;#d90429;#002b5b" dur="2s" repeatCount="indefinite" />
+                </circle>
+            </svg>
+            <div class="loading-text">جاري الاتصال بالأقمار الصناعية...</div>
         </div>
     </div>
 
-    <main class="container" style="margin-top: 30px;">
-        <h2 id="sectionTitle" style="border-right: 5px solid var(--radar-red); padding-right: 15px; margin-bottom: 20px; color: var(--main-blue);">
-          حيث كان الحدث كان Radar24 أول الحاضرين
-        </h2>
-        
-        <div class="news-grid" id="newsContainer">
-        </div>
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <div class="container top-bar-flex">
+            <div class="top-info">
+                <span id="currentDate">جاري تحميل التاريخ...</span>
+                <span class="divider">|</span>
+                <span id="weatherWidget"><i class="fas fa-cloud-sun"></i> بيروت: 22°C</span>
+            </div>
+            
+            <div class="top-socials">
+                <a href="#" aria-label="فيسبوك" class="social-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951z"/>
+                    </svg>
+                </a>
+                
+                <a href="#" aria-label="تويتر" class="social-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.316l5.733-6.57L0 .75h5.063l3.495 4.633L12.601.75Zm-.86 13.028h1.36L4.323 2.145H2.865l8.875 11.633Z"/>
+                    </svg>
+                </a>
 
-        <section id="supportersSection" style="margin-top: 60px; padding: 40px 20px; background: linear-gradient(145deg, #001f3f, #002b5b); border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.3); border: 2px solid #D4AF37;">
-            <div style="text-align: center; margin-bottom: 40px;">
-                <h2 style="color: #D4AF37; font-size: 2rem; font-weight: 900; text-shadow: 0 2px 10px rgba(212,175,55,0.4);">
-                    <i class="fas fa-gem"></i> لوحة شرف داعمي رادار 24
-                </h2>
-                <p style="color: #eee; margin-top: 10px;">نعتز بنخبة الداعمين الذين يساهمون في استمرار رسالتنا الإخبارية</p>
-                <a href="https://wtsi.me/96179359482" target="_blank" style="display: inline-block; margin-top: 20px; padding: 10px 25px; background: #25d366; color: white; border-radius: 50px; text-decoration: none; font-weight: bold; font-size: 0.9rem; box-shadow: 0 4px 15px rgba(37,211,102,0.3);">
-                    <i class="fab fa-whatsapp"></i> تواصل معنا لتكون ضمن الداعمين
+                <a href="https://wtsi.me/96179359482" target="_blank" aria-label="واتساب" class="social-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Header -->
+    <header class="main-header" id="stickyHeader">
+        <div class="container header-content">
+            
+            <button class="menu-trigger" onclick="toggleSidebar()" aria-label="فتح القائمة">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </button>
+
+            <div class="logo-wrapper" onclick="handleLogoClick()" style="cursor: pointer;">
+                <a class="brand-logo">
+                    <div class="radar-icon">
+                        <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M50 90C72.0914 90 90 72.0914 90 50C90 27.9086 72.0914 10 50 10C27.9086 10 10 27.9086 10 50C10 72.0914 27.9086 90 50 90Z" stroke="white" stroke-width="4"/>
+                            <path d="M50 75C63.8071 75 75 63.8071 75 50C75 36.1929 63.8071 25 50 25C36.1929 25 25 36.1929 25 50C25 63.8071 36.1929 75 50 75Z" stroke="#d90429" stroke-width="4"/>
+                            <circle cx="50" cy="50" r="10" fill="#d90429">
+                                <animate attributeName="opacity" values="1;0.5;1" dur="2s" repeatCount="indefinite"/>
+                            </circle>
+                            <path d="M50 50L80 20" stroke="#d90429" stroke-width="2" stroke-linecap="round">
+                                <animateTransform attributeName="transform" type="rotate" from="0 50 50" to="360 50 50" dur="4s" repeatCount="indefinite"/>
+                            </path>
+                        </svg>
+                    </div>
+                    <div class="brand-text">
+                        <span class="text-radar">رادار</span>
+                        <span class="text-24">24</span>
+                    </div>
                 </a>
             </div>
 
-            <div id="supportersContainer" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 25px; justify-items: center;">
+            <div class="header-actions">
+                <button class="search-trigger" onclick="toggleSearch()" aria-label="بحث">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                </button>
+            </div>
+
+        </div>
+    </header>
+
+    <!-- News Ticker -->
+    <div class="news-ticker">
+        <div class="ticker-label">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M12 6v6l4 2" stroke="#d90429" stroke-width="2" fill="none"/>
+            </svg>
+            عاجل الآن
+        </div>
+        <div class="ticker-content" id="tickerContent">
+            <span>جاري تحميل آخر الأخبار...</span>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main>
+        <!-- News Section -->
+        <section class="news-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title" id="sectionTitle">حيثما كان الحدث.. كان الرادار أول الحاضرين</h2>
                 </div>
+
+                <!-- Filter Buttons -->
+                <div class="filter-section">
+                    <div class="container">
+                        <div class="filter-buttons">
+                            <button class="filter-btn active" onclick="filterNews('الكل')">الكل</button>
+                            <button class="filter-btn" onclick="filterNews('عاجل')">عاجل</button>
+                            <button class="filter-btn" onclick="filterNews('أخبار العالم')">أخبار العالم</button>
+                            <button class="filter-btn" onclick="filterNews('سياسة')">سياسة</button>
+                            <button class="filter-btn" onclick="filterNews('اقتصاد')">اقتصاد</button>
+                            <button class="filter-btn" onclick="filterNews('رياضة')">رياضة</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- News Grid -->
+                <div class="news-grid" id="newsContainer">
+                    <!-- Skeleton loaders -->
+                    <div class="skeleton-card">
+                        <div class="skeleton-img"></div>
+                        <div class="skeleton-content">
+                            <div class="skeleton-line"></div>
+                            <div class="skeleton-line"></div>
+                            <div class="skeleton-line" style="width: 60%;"></div>
+                        </div>
+                    </div>
+                    <div class="skeleton-card">
+                        <div class="skeleton-img"></div>
+                        <div class="skeleton-content">
+                            <div class="skeleton-line"></div>
+                            <div class="skeleton-line"></div>
+                            <div class="skeleton-line" style="width: 60%;"></div>
+                        </div>
+                    </div>
+                    <div class="skeleton-card">
+                        <div class="skeleton-img"></div>
+                        <div class="skeleton-content">
+                            <div class="skeleton-line"></div>
+                            <div class="skeleton-line"></div>
+                            <div class="skeleton-line" style="width: 60%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIP Supporters Section -->
+        <section class="vip-section">
+            <div class="container">
+                <div class="vip-header">
+                    <h2 class="vip-title">✨ داعمو المنصة ✨</h2>
+                    <p class="vip-subtitle">شكراً لكل من ساهم في إنجاح هذا المشروع</p>
+                </div>
+                <div class="supporters-grid" id="supportersGrid">
+                    <p style="color:white; width:100%;">جاري التحميل...</p>
+                </div>
+            </div>
         </section>
     </main>
 
-    <div id="newsModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal()">&times;</span>
-            <div id="modalBody">
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>روابط هامة</h4>
+                    <ul>
+                        <li><a href="about.html">من نحن</a></li>
+                        <li><a href="#">سياسة الخصوصية</a></li>
+                        <li><a href="#">شروط الاستخدام</a></li>
+                        <li><a href="#">فريق التحرير</a></li>
+                        <li><a href="https://wtsi.me/96179359482">أعلن معنا</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>الأقسام</h4>
+                    <ul>
+                        <li><a href="#" onclick="filterNews('أخبار العالم')">أخبار العالم</a></li>
+                        <li><a href="#" onclick="filterNews('سياسة')">السياسة</a></li>
+                        <li><a href="#" onclick="filterNews('اقتصاد')">الاقتصاد</a></li>
+                        <li><a href="#" onclick="filterNews('عاجل')">الأخبار العاجلة</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>تواصل معنا</h4>
+                    <a href="https://wtsi.me/96179359482" target="_blank" class="whatsapp-btn-large">
+                        <i class="fab fa-whatsapp"></i>
+                        <span dir="ltr" style="display: inline-block;"> +961 79 359 482</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="copyrights">
+                <p>© 2026 جميع الحقوق محفوظة لشبكة رادار 24</p>
+                <a href="https://zakui.netlify.app/" target="_blank" class="dev-link">اضغط هنا لزيارة موقع المطور</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scroll to Top Button -->
+    <a href="#" class="scroll-top-btn" id="scrollTopBtn" title="للأعلى">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+
+    <!-- Search Modal with Modern Close Button -->
+    <div class="search-modal" id="searchModal">
+        <!-- Modern Animated Close Button -->
+        <div class="search-close-btn" onclick="toggleSearch()"></div>
+        
+        <div class="search-container-modern">
+            <div class="input-wrapper">
+                <span class="search-icon-large">🔍</span>
+                <input type="text" id="searchInput" placeholder="عن ماذا تبحث اليوم؟" autocomplete="off" onkeypress="InteractionManager.handleSearch(event)">
+            </div>
+            
+            <div class="trends-section">
+                <h4>🔥 ملفات الرصد الساخنة - 2026:</h4>
+                <div class="tags-cloud">
+                    <span class="trend-tag" onclick="fillSearch('عاجل')">#عاجل</span>
+                    <span class="trend-tag" onclick="fillSearch('حزب الله')">#حزب_الله</span>
+                    <span class="trend-tag" onclick="fillSearch('العدوان الإسرائيلي')">#العدوان_الإسرائيلي</span>
+                    <span class="trend-tag" onclick="fillSearch('التحركات الأمريكية')">#التحركات_الأمريكية</span>
+                    <span class="trend-tag" onclick="fillSearch('إيران والنووي')">#إيران_والنووي</span>
+                    <span class="trend-tag" onclick="fillSearch('جبهة الجنوب')">#جبهة_الجنوب</span>
+                    <span class="trend-tag" onclick="fillSearch('غزة الميداني')">#غزة_الميداني</span>
+                    <span class="trend-tag" onclick="fillSearch('مجلس الأمن')">#مجلس_الأمن</span>
+                </div>
             </div>
         </div>
     </div>
 
-    <footer style="background: var(--main-blue); color: white; text-align: center; padding: 40px 0; margin-top: 60px; border-top: 5px solid var(--radar-red);">
-        <p>© 2026 شبكة رادار 24 الإخبارية - جميع الحقوق محفوظة</p>
-    </footer>
+    <!-- News Detail Modal -->
+    <div id="newsModal" class="news-modal" style="display: none;">
+        <div class="modal-card">
+            <button class="modal-close" onclick="InteractionManager.closeModal()">×</button>
+            <div class="modal-body" id="modalBody">
+                <!-- Content will be injected here -->
+            </div>
+        </div>
+    </div>
 
-    <script>
-        const firebaseConfig = {
-            databaseURL: "https://radar24lb-972bb-default-rtdb.europe-west1.firebasedatabase.app/"
-        };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
-
-        let allNewsData = [];
-
-        db.ref('allNews').on('value', (snapshot) => {
-            const data = snapshot.val();
-            if (!data) return;
-            allNewsData = Object.values(data).reverse();
-            displayNews(allNewsData);
+    <!-- Mobile Sidebar -->
+    <div class="sidebar-overlay" id="mobileSidebar" onclick="toggleSidebar()">
+        <div class="sidebar-content-3d" onclick="event.stopPropagation()">
             
-            const tickerElement = document.getElementById('breakingTicker');
-            const separator = '<span style="display:inline-block; width:80px; height:8px; background-color:var(--main-blue); margin: 0 40px; vertical-align:middle; border-radius:4px;"></span>';
+            <div class="sidebar-header">
+                <h3>القائمة الرئيسية</h3>
+                <button class="close-btn" onclick="toggleSidebar()">✕</button>
+            </div>
 
-            const breakingNews = allNewsData.filter(news => news.category === "عاجل");
+            <div class="sidebar-body">
+                <ul class="mobile-nav-list">
+                    <li><a href="#" onclick="filterNews('الكل'); toggleSidebar()">الرئيسية</a></li>
+                    <li><a href="#" onclick="filterNews('عاجل'); toggleSidebar()">أخبار عاجلة</a></li>
+                    <li><a href="#" onclick="filterNews('أخبار العالم'); toggleSidebar()">أخبار العالم</a></li>
+                    <li><a href="#" onclick="filterNews('سياسة'); toggleSidebar()">سياسة</a></li>
+                    <li><a href="#" onclick="filterNews('اقتصاد'); toggleSidebar()">اقتصاد</a></li>
+                    <li><a href="#" onclick="filterNews('رياضة'); toggleSidebar()">رياضة</a></li>
+                    <li><a href="about.html">من نحن</a></li>
+                </ul>
 
-            if(tickerElement) {
-                if (breakingNews.length > 0) {
-                    // نأخذ عنوان أول خبر عاجل فقط
-                    const latestOne = breakingNews[0].title;
-                    tickerElement.innerHTML = `<span>${latestOne}</span>${separator}<span>${latestOne}</span>${separator}`;
-                } else {
-                    tickerElement.innerHTML = "<span>لا يوجد أخبار عاجلة حالياً</span>";
-                }
-            }
-        });
-
-
-        // جلب وترتيب الداعمين تلقائياً
-        db.ref('supporters').on('value', (snapshot) => {
-            const container = document.getElementById('supportersContainer');
-            container.innerHTML = '';
-            const data = snapshot.val();
-            if (!data) return;
-
-            // تحويل الكائن لمصفوفة وترتيبها من الأعلى مبلغاً إلى الأقل
-            const list = Object.values(data).sort((a, b) => b.amount - a.amount);
-
-            list.forEach((sup, index) => {
-                let borderStyle = "border: 2px solid #ddd;";
-                let crown = "";
-                let glow = "";
-                
-                if(index === 0) { // المركز الأول - ذهبي
-                    borderStyle = "border: 4px solid #D4AF37; transform: scale(1.1);";
-                    crown = '<i class="fas fa-crown" style="color:#D4AF37; position:absolute; top:-20px; font-size:1.5rem;"></i>';
-                    glow = "box-shadow: 0 0 20px rgba(212,175,55,0.6);";
-                } else if(index === 1) { // المركز الثاني - فضي
-                    borderStyle = "border: 3px solid #C0C0C0;";
-                    crown = '<i class="fas fa-medal" style="color:#C0C0C0; position:absolute; top:-15px;"></i>';
-                }
-
-                const displayAmount = sup.privacy === 'hide' ? '***' : `${sup.amount}$`;
-                const userImg = sup.image || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png';
-
-                container.innerHTML += `
-                    <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 15px; text-align: center; position: relative; width: 180px; transition: 0.3s; ${borderStyle} ${glow}">
-                        ${crown}
-                        <img src="${userImg}" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; margin-bottom: 15px; border: 2px solid #fff;">
-                        <h4 style="color: white; font-size: 1rem; margin-bottom: 5px;">${sup.name}</h4>
-                        <div style="color: #D4AF37; font-weight: bold; font-size: 1.1rem;">${displayAmount}</div>
+                <div class="sidebar-footer">
+                    <h4>تابعنا على</h4>
+                    <div class="social-row">
+                        <a href="https://www.facebook.com/seraj.lsyed" target="_blank" class="sb-social fb">
+                            <i class="fab fa-facebook-f"></i> فيسبوك
+                        </a>
+                        <a href="https://chat.whatsapp.com/Io7exzjLzPb3apvogScREM" target="_blank" class="sb-social wa">
+                            <i class="fab fa-whatsapp"></i> المجموعة
+                        </a>
                     </div>
-                `;
-            });
+
+                    <div class="dev-box">
+                        <p>للتواصل مع المصمم</p>
+                        <a href="https://zakui.netlify.app/" target="_blank" class="dev-btn-3d">
+                            Zakui Dev 🚀
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // إخفاء شاشة التحميل بعد انتهاء تحميل الصفحة
+        window.addEventListener('load', function() {
+            const preloader = document.getElementById('preloader');
+            preloader.style.opacity = '0';
+            setTimeout(() => {
+                preloader.style.display = 'none';
+                document.body.classList.remove('loading-state');
+            }, 500);
+            
+            // تعيين التاريخ الحالي
+            const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('currentDate').innerText = new Date().toLocaleDateString('ar-LB', dateOptions);
         });
 
-        function displayNews(newsList) {
-            const container = document.getElementById('newsContainer');
-            container.innerHTML = '';
-            newsList.forEach((news, index) => {
-                const imageHtml = news.image ? `<div class="card-img-wrap"><img src="${news.image}"></div>` : '';
-                container.innerHTML += `
-                    <article class="news-card">
-                        <span class="badge-cat">${news.category}</span>
-                        ${imageHtml}
-                        <div class="card-content">
-                            <h3>${news.title}</h3>
-                            <p>${news.text.substring(0, 100)}...</p>
-                        </div>
-                        <div class="card-footer">
-                            <span><i class="far fa-clock"></i> ${news.time}</span>
-                            <span onclick="openNews(${allNewsData.indexOf(news)})" style="color: var(--radar-red); font-weight: bold; cursor: pointer;">إقرأ المزيد +</span>
-                        </div>
-                    </article>`;
-            });
-        }
-
-        function filterNews(category) {
-            document.getElementById('sectionTitle').innerText = category === 'الكل' ? 'حيث كان الحدث كان Radar24 أول الحاضرين' : category;
-            const links = document.querySelectorAll('#mainNav a');
-            links.forEach(link => link.classList.remove('active'));
-            if(event) event.target.classList.add('active');
-            if (category === 'الكل') {
-                displayNews(allNewsData);
+        // زر الصعود للأعلى
+        window.onscroll = function() {
+            const btn = document.getElementById('scrollTopBtn');
+            const header = document.getElementById('stickyHeader');
+            
+            if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+                btn.classList.add('show');
             } else {
-                const filtered = allNewsData.filter(n => n.category === category);
-                displayNews(filtered);
+                btn.classList.remove('show');
             }
-        }
 
-        function openNews(index) {
-            const news = allNewsData[index];
-            const modalBody = document.getElementById('modalBody');
-            const imageHtml = news.image ? `<img src="${news.image}" style="width:100%; border-radius:10px; margin-bottom:15px;">` : '';
-            modalBody.innerHTML = `
-                ${imageHtml}
-                <span class="badge-cat" style="position:static; margin-bottom:10px; display:inline-block;">${news.category}</span>
-                <h2 style="color:var(--main-blue); margin-bottom:15px;">${news.title}</h2>
-                <p style="white-space: pre-wrap; color:#333; line-height:1.8;">${news.text}</p>
-                <hr style="margin:20px 0; opacity:0.2;">
-                <small style="color:#888;">نُشر في: ${news.time}</small>
-            `;
-            document.getElementById('newsModal').style.display = 'block';
-        }
-
-        function closeModal() {
-            document.getElementById('newsModal').style.display = 'none';
-        }
-
-        window.onclick = function(event) {
-            if (event.target == document.getElementById('newsModal')) closeModal();
-        }
+            // تثبيت الهيدر مع تأثير
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        };
     </script>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script src="app.js"></script>
+
 </body>
 </html>
