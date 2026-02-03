@@ -1,163 +1,1593 @@
-/* Radar 24 - Professional Stylesheet V3 */
 :root {
-    --main-blue: #002b5b;
-    --radar-red: #d90429;
-    --dark: #1a1a1a;
-    --light-gray: #f8f9fa;
-    --shadow: 0 10px 30px rgba(0,0,0,0.1);
-}
-
-* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; }
-
-body { background-color: #f0f2f5; direction: rtl; line-height: 1.6; overflow-x: hidden; }
-
-.container { width: 95%; max-width: 1100px; margin: 0 auto; }
-
-/* Header & Nav */
-.main-header {
-    background: var(--main-blue);
-    color: white;
-    padding: 10px 0;
-    border-bottom: 5px solid var(--radar-red);
-    position: sticky; top: 0; z-index: 1000;
-}
-
-.header-flex { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
-
-.logo { font-size: 1.6rem; font-weight: 900; }
-.logo span { background: var(--radar-red); padding: 2px 8px; border-radius: 4px; }
-
-nav ul { display: flex; list-style: none; gap: 12px; }
-nav ul li a { color: white; text-decoration: none; font-weight: 600; font-size: 0.85rem; transition: 0.3s; padding: 5px; }
-nav ul li a:hover, nav ul li a.active { color: #ffcc00; border-bottom: 2px solid #ffcc00; }
-
-.ticker-wrap { 
-    background: #000; 
-    color: white; 
-    height: 40px; 
-    display: flex; 
-    align-items: center; 
-    overflow: hidden; 
-    position: relative;
-    width: 100%; 
-}
-
-.ticker-title { 
-    background: var(--radar-red); 
-    padding: 0 15px; 
-    height: 100%; 
-    display: flex; 
-    align-items: center; 
-    font-weight: bold; 
-    position: absolute; 
-    right: 0;
-    z-index: 20; 
-    font-size: 0.9rem; 
-    box-shadow: -5px 0 10px rgba(0,0,0,0.5); 
-}
-.ticker-content {
-    display: inline-flex; 
-    white-space: nowrap;
-    width: max-content; 
-    position: absolute; 
-    left: 0; 
+    /* --- Primary Palette (الألوان الأساسية) --- */
+    --primary-dark: #0f172a;       /* Slate 900 - خلفية داكنة فاخرة */
+    --primary-light: #1e293b;      /* Slate 800 - خلفية العناصر */
+    --accent-red: #d90429;         /* Crimson - لون الهوية والرادار */
+    --accent-red-glow: rgba(217, 4, 41, 0.4);
     
-    animation: ticker-loop 20s linear infinite; 
+    /* --- Secondary Palette (الألوان الثانوية) --- */
+    --secondary-blue: #3b82f6;     /* Royal Blue */
+    --gold-vip: #D4AF37;           /* Gold - للداعمين */
+    --gold-gradient: linear-gradient(135deg, #D4AF37 0%, #F2D06B 50%, #B38F24 100%);
+    
+    /* --- Text Colors (ألوان النصوص) --- */
+    --text-main: #ffffff;
+    --text-muted: #94a3b8;
+    --text-dark: #1e293b;
+    
+    /* --- Backgrounds (الخلفيات) --- */
+    --bg-body: #f8fafc;            /* Light Gray - لراحة العين في القراءة */
+    --bg-glass: rgba(255, 255, 255, 0.95);
+    --bg-glass-dark: rgba(15, 23, 42, 0.95);
+    
+    /* --- Spacing & Dimensions (الأبعاد) --- */
+    --container-width: 1280px;
+    --header-height: 80px;
+    --border-radius-sm: 8px;
+    --border-radius-md: 12px;
+    --border-radius-lg: 20px;
+    --border-radius-xl: 30px;
+    
+    /* --- Shadows & Effects (الظلال والمؤثرات) --- */
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    --shadow-glow: 0 0 20px var(--accent-red-glow);
+    
+    /* --- Transitions (الحركات) --- */
+    --trans-fast: all 0.2s ease;
+    --trans-medium: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --trans-slow: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    --trans-bouncy: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    
+    /* --- Typography (الخطوط) --- */
+    --font-primary: 'Cairo', sans-serif;
+    --font-secondary: 'Tajawal', sans-serif;
 }
 
-.ticker-content span {
-    display: inline-block;
-    padding-right: 100px; 
-    color: white; 
+/* ==========================================================================
+   2. RESET & BASE STYLES
+   إعادة ضبط المتصفح وتجهيز البيئة
+   ========================================================================== */
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    outline: none;
 }
 
-@keyframes ticker-loop {
-    0% { transform: translate3d(-50%, 0, 0); } 
-    100% { transform: translate3d(0, 0, 0); } 
+html {
+    scroll-behavior: smooth;
+    font-size: 16px;
 }
 
-/* News Grid */
-.news-grid { 
-    display: grid; 
-    grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); 
-    gap: 15px; 
-    padding: 15px 0; 
+body {
+    background-color: var(--bg-body);
+    color: var(--text-dark);
+    font-family: var(--font-primary);
+    line-height: 1.6;
+    direction: rtl;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
-.news-card { 
-    background: white; border-radius: 10px; overflow: hidden; 
-    box-shadow: var(--shadow); transition: 0.3s; 
-    display: flex; flex-direction: column; position: relative;
+/* إخفاء شريط التمرير الافتراضي واستبداله بآخر مخصص */
+::-webkit-scrollbar {
+    width: 8px;
 }
 
-.card-img-wrap { width: 100%; height: 180px; background: #eee; overflow: hidden; }
-.card-img-wrap img { width: 100%; height: 100%; object-fit: cover; }
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
 
-/* Badge Fix */
-.badge-cat { 
-    position: absolute; 
-    top: 5px; 
-    right: 5px; 
-    background: var(--radar-red); 
-    color: white; 
-    padding: 3px 10px; 
-    font-size: 0.7rem; 
-    font-weight: bold; 
+::-webkit-scrollbar-thumb {
+    background: var(--primary-light);
     border-radius: 4px;
-    z-index: 5;
 }
 
-.card-content { padding: 15px; flex-grow: 1; }
-.card-content h3 { 
-    color: var(--main-blue); 
-    margin-bottom: 8px; 
-    font-size: 1.1rem; 
+::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-red);
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+    transition: var(--trans-fast);
+}
+
+ul {
+    list-style: none;
+}
+
+button {
+    cursor: pointer;
+    border: none;
+    font-family: inherit;
+}
+
+.container {
+    width: 92%;
+    max-width: var(--container-width);
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+/* ==========================================================================
+   3. PRELOADER ANIMATION
+   شاشة التحميل (الرادار النابض)
+   ========================================================================== */
+.preloader-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #ffffff;
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    transition: opacity 0.5s ease-out;
+}
+
+.loader-content {
+    text-align: center;
+}
+
+.radar-pulse {
+    width: 120px;
+    height: 120px;
+    margin-bottom: 20px;
+}
+
+.loading-text {
+    font-family: var(--font-secondary);
+    font-weight: 700;
+    color: var(--primary-dark);
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+    animation: blinkText 1.5s infinite;
+}
+
+@keyframes blinkText {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+/* حالة تحميل الصفحة للجسم */
+body.loading-state {
+    overflow: hidden;
+}
+
+/* ==========================================================================
+   4. TOP BAR STYLES
+   الشريط العلوي (التاريخ والتواصل)
+   ========================================================================== */
+.top-bar {
+    background-color: var(--primary-dark);
+    color: #e2e8f0;
+    padding: 8px 0;
+    font-size: 0.85rem;
+    position: relative;
+    z-index: 1001;
+}
+
+.top-bar-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.top-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-weight: 600;
+}
+
+.divider {
+    color: rgba(255,255,255,0.2);
+}
+
+.top-socials {
+    display: flex;
+    gap: 15px;
+}
+
+.social-icon {
+    color: rgba(255,255,255,0.7);
+    transition: var(--trans-fast);
+    display: flex;
+    align-items: center;
+}
+
+.social-icon:hover {
+    color: var(--accent-red);
+    transform: translateY(-2px);
+}
+
+/* ==========================================================================
+   5. MAIN HEADER & MEGA MENU
+   الهيدر الرئيسي والقوائم الضخمة
+   ========================================================================== */
+.main-header {
+    background: var(--bg-glass-dark);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    height: var(--header-height);
+    transition: var(--trans-medium);
+}
+
+.main-header.scrolled {
+    height: 70px;
+    box-shadow: var(--shadow-lg);
+    background: rgba(15, 23, 42, 0.98);
+}
+
+.header-content {
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* --- Logo Styling --- */
+.logo-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+.brand-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+}
+
+.radar-icon {
+    display: flex;
+    align-items: center;
+    filter: drop-shadow(0 0 10px rgba(217, 4, 41, 0.3));
+    z-index: 1002; /* Ensure radar icon is always visible above sidebar */
+    position: relative;
+}
+
+.brand-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1;
+}
+
+.text-radar {
+    color: #fff;
+    font-size: 1.6rem;
+    font-weight: 900;
+    letter-spacing: -1px;
+}
+
+.text-24 {
+    color: var(--accent-red);
+    font-size: 1.6rem;
+    font-weight: 900;
+    margin-right: 2px;
+}
+
+/* --- Desktop Navigation --- */
+.desktop-nav {
+    display: none; /* الافتراضي مخفي للموبايل، يظهر في الميديا كويري */
+}
+
+.nav-list {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+}
+
+.nav-link {
+    color: rgba(255,255,255,0.85);
+    font-weight: 700;
+    font-size: 1rem;
+    padding: 10px 0;
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: var(--trans-medium);
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 3px;
+    background: var(--accent-red);
+    transition: width 0.3s ease;
+    border-radius: 2px;
+}
+
+.nav-link:hover, .nav-link.active {
+    color: #fff;
+}
+
+.nav-link:hover::after, .nav-link.active::after {
+    width: 100%;
+}
+
+.nav-icon {
+    opacity: 0.7;
+}
+
+/* VIP Link Special Styling */
+.vip-link {
+    color: var(--gold-vip) !important;
+}
+.vip-link svg {
+    filter: drop-shadow(0 0 5px rgba(212,175,55,0.5));
+}
+.vip-link:hover {
+    text-shadow: 0 0 10px rgba(212,175,55,0.6);
+}
+
+/* نقطة النبض للأخبار العاجلة في القائمة */
+.pulse-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--accent-red);
+    border-radius: 50%;
+    display: inline-block;
+    margin-left: 8px;
+    animation: pulseAnimation 1.5s infinite;
+}
+
+@keyframes pulseAnimation {
+    0%, 100% { 
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% { 
+        transform: scale(1.3);
+        opacity: 0.6;
+    }
+}
+
+/* --- Dropdown Menu (Mega Menu) --- */
+.has-dropdown {
+    position: relative;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: white;
+    min-width: 600px;
+    padding: 30px;
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-xl);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: var(--trans-medium);
+    z-index: 100;
+}
+
+.has-dropdown:hover .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.dropdown-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+}
+
+.drop-col h4 {
+    color: var(--primary-dark);
+    margin-bottom: 12px;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.drop-col h4 i {
+    color: var(--accent-red);
+}
+
+.drop-col a {
+    display: block;
+    padding: 8px 0;
+    color: #64748b;
+    transition: var(--trans-fast);
+    font-weight: 600;
+}
+
+.drop-col a:hover {
+    color: var(--accent-red);
+    padding-right: 5px;
+}
+
+/* --- Search Icon Button --- */
+.search-trigger {
+    background: rgba(255,255,255,0.1);
+    border: none;
+    color: white;
+    padding: 10px;
+    border-radius: 50%;
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: var(--trans-medium);
+}
+
+.search-trigger:hover {
+    background: var(--accent-red);
+    transform: rotate(90deg);
+}
+
+/* --- Menu Trigger (Mobile) --- */
+.menu-trigger {
+    display: flex;
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 8px;
+    transition: var(--trans-fast);
+}
+
+.menu-trigger:hover {
+    color: var(--accent-red);
+}
+
+/* ==========================================================================
+   6. NEWS TICKER (الشريط العاجل)
+   ========================================================================== */
+.news-ticker {
+    background: linear-gradient(90deg, var(--accent-red) 0%, #8B0000 100%);
+    color: white;
+    padding: 12px 0;
+    overflow: hidden;
+    position: relative;
+    border-bottom: 2px solid rgba(255,255,255,0.1);
+}
+
+.ticker-label {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.3);
+    padding: 12px 20px;
+    font-weight: 900;
+    letter-spacing: 1px;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.ticker-content {
+    display: flex;
+    animation: scroll 30s linear infinite;
+    padding-right: 150px; /* مساحة للـ Label */
+}
+
+@keyframes scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+.ticker-content:hover {
+    animation-play-state: paused;
+}
+
+/* ==========================================================================
+   7. HERO SECTION (القسم البطولي)
+   ========================================================================== */
+.hero-section {
+    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-light) 100%);
+    padding: 80px 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, var(--accent-red-glow) 0%, transparent 70%);
+    opacity: 0.2;
+    border-radius: 50%;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    color: white;
+}
+
+.hero-title {
+    font-size: 3rem;
+    font-weight: 900;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 10px rgba(0,0,0,0.3);
+}
+
+.hero-subtitle {
+    font-size: 1.3rem;
+    color: var(--text-muted);
+    margin-bottom: 30px;
+}
+
+.cta-button {
+    background: var(--accent-red);
+    color: white;
+    padding: 15px 40px;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    transition: var(--trans-bouncy);
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.cta-button:hover {
+    background: #b8032a;
+    transform: scale(1.05);
+    box-shadow: var(--shadow-glow);
+}
+
+/* ==========================================================================
+   8. FILTER SECTION (أزرار الفلترة)
+   ========================================================================== */
+.filter-section {
+    background: white;
+    padding: 25px 0;
+    box-shadow: var(--shadow-sm);
+    position: sticky;
+    top: var(--header-height);
+    z-index: 999;
+}
+
+.filter-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.filter-btn {
+    background: #f1f5f9;
+    color: var(--text-dark);
+    padding: 10px 25px;
+    border-radius: 25px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    transition: var(--trans-medium);
+    border: 2px solid transparent;
+}
+
+.filter-btn:hover {
+    background: #e2e8f0;
+    transform: translateY(-2px);
+}
+
+.filter-btn.active {
+    background: var(--accent-red);
+    color: white;
+    border-color: var(--accent-red);
+    box-shadow: var(--shadow-md);
+}
+
+/* ==========================================================================
+   9. NEWS GRID SECTION (شبكة الأخبار)
+   ========================================================================== */
+.news-section {
+    padding: 60px 0;
+    background: var(--bg-body);
+}
+
+.section-header {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.section-title {
+    font-size: 2.2rem;
+    font-weight: 900;
+    color: var(--primary-dark);
+    margin-bottom: 10px;
+    position: relative;
+    display: inline-block;
+}
+
+.section-title::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 4px;
+    background: var(--accent-red);
+    border-radius: 2px;
+}
+
+.news-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 30px;
+    margin-top: 40px;
+}
+
+/* ==========================================================================
+   10. NEWS CARD STYLES (تصميم بطاقة الخبر) - ENHANCED WITH DYNAMIC IMAGE HANDLING
+   ========================================================================== */
+.news-card {
+    background: white;
+    border-radius: var(--border-radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    transition: var(--trans-medium);
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+}
+
+.news-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-xl);
+}
+
+/* Image container - will be hidden if no image */
+.card-img-wrap {
+    position: relative;
+    width: 100%;
+    height: 220px;
+    overflow: hidden;
+    transition: var(--trans-medium);
+}
+
+/* When card has no image, hide the wrapper completely */
+.news-card.no-image .card-img-wrap {
+    display: none !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.card-img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: var(--trans-slow);
+}
+
+.news-card:hover .card-img-wrap img {
+    transform: scale(1.1);
+}
+
+.category-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: var(--accent-red);
+    color: white;
+    padding: 6px 15px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    z-index: 2;
+}
+
+/* Card body - expands to fill available space when no image */
+.card-body {
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    flex: 1; /* Takes all available space */
+}
+
+/* When card has no image, increase body padding for better appearance */
+.news-card.no-image .card-body {
+    padding: 35px 25px;
+}
+
+.card-meta {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.card-title {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--primary-dark);
+    margin-bottom: 12px;
     line-height: 1.4;
-    margin-top: 25px; 
-}
-.card-content p { color: #555; font-size: 0.85rem; height: 3.6em; overflow: hidden; }
-
-.card-footer { 
-    padding: 10px 15px; background: #fdfdfd; 
-    border-top: 1px solid #eee; display: flex; justify-content: space-between; 
-    font-size: 0.75rem; color: #888;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
-/* About Section */
-.about-hero {
-    background: linear-gradient(135deg, var(--main-blue) 0%, #004d99 100%);
-    color: white; padding: 40px 20px; border-radius: 15px; text-align: center; margin: 20px 0;
+.card-excerpt {
+    color: #64748b;
+    line-height: 1.7;
+    font-size: 0.95rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    flex: 1; /* Takes remaining space */
 }
-.about-card { background: white; padding: 25px; border-radius: 12px; margin-bottom: 20px; border-right: 5px solid var(--radar-red); box-shadow: var(--shadow); }
 
-/* Modal */
-.modal { display: none; position: fixed; z-index: 2000; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); }
-.modal-content { background: white; margin: 5% auto; padding: 20px; width: 90%; max-width: 700px; border-radius: 12px; position: relative; max-height: 85vh; overflow-y: auto; }
-.close { position: absolute; left: 15px; top: 10px; font-size: 28px; cursor: pointer; color: var(--radar-red); }
-.btn-delete { background: #ff4444; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 0.7rem; }
+/* When card has no image, allow more text lines */
+.news-card.no-image .card-excerpt {
+    -webkit-line-clamp: 5;
+}
 
-/* --- التعديلات الجديدة لتنظيم القائمة (Header Optimization) --- */
+.card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #e2e8f0;
+}
 
-/* 1. جعل القائمة في الجوال تترتب بشكل أنيق */
+.read-more {
+    color: var(--accent-red);
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: var(--trans-fast);
+}
+
+.read-more:hover {
+    gap: 10px;
+}
+
+/* Loading Skeleton */
+.skeleton-card {
+    background: white;
+    border-radius: var(--border-radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+}
+
+.skeleton-img {
+    height: 220px;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+}
+
+.skeleton-content {
+    padding: 25px;
+}
+
+.skeleton-line {
+    height: 15px;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+    margin-bottom: 10px;
+    border-radius: 4px;
+}
+
+@keyframes loading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* ==========================================================================
+   11. MODAL (نافذة تفاصيل الخبر)
+   ========================================================================== */
+.news-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    z-index: 10000;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.modal-card {
+    background: white;
+    max-width: 900px;
+    width: 100%;
+    max-height: 90vh;
+    border-radius: var(--border-radius-xl);
+    overflow: hidden;
+    position: relative;
+    animation: modalSlideUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes modalSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(50px) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.modal-close {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: rgba(0,0,0,0.6);
+    color: white;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    transition: var(--trans-fast);
+}
+
+.modal-close:hover {
+    background: var(--accent-red);
+    transform: rotate(90deg);
+}
+
+.modal-body {
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 40px;
+}
+
+.modal-body img {
+    width: 100%;
+    border-radius: var(--border-radius-md);
+    margin-bottom: 25px;
+}
+
+.modal-body h2 {
+    font-size: 2rem;
+    color: var(--primary-dark);
+    margin-bottom: 20px;
+}
+
+.modal-body p {
+    font-size: 1.1rem;
+    line-height: 1.9;
+    color: #475569;
+}
+
+/* ==========================================================================
+   12. VIP SUPPORTERS SECTION (قسم الداعمين)
+   ========================================================================== */
+.vip-section {
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    padding: 80px 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.vip-section::before {
+    content: '';
+    position: absolute;
+    top: -200px;
+    left: -200px;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(217, 4, 41, 0.15) 0%, transparent 70%);
+    border-radius: 50%;
+}
+
+.vip-header {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.vip-title {
+    font-size: 2.5rem;
+    font-weight: 900;
+    background: var(--gold-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 15px;
+}
+
+.vip-subtitle {
+    color: var(--text-muted);
+    font-size: 1.1rem;
+}
+
+.supporters-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+    position: relative;
+    z-index: 2;
+}
+
+.vip-card {
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: var(--border-radius-lg);
+    padding: 30px;
+    text-align: center;
+    transition: var(--trans-medium);
+    position: relative;
+    overflow: hidden;
+}
+
+.vip-card:hover {
+    transform: translateY(-10px);
+    border-color: var(--gold-vip);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+}
+
+.vip-card.gold-tier {
+    background: linear-gradient(135deg, rgba(212,175,55,0.2) 0%, rgba(139,0,0,0.2) 100%);
+    border-color: var(--gold-vip);
+}
+
+.vip-avatar-box {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 20px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 3px solid rgba(255,255,255,0.2);
+    transition: var(--trans-medium);
+}
+
+.gold-tier .vip-avatar-box {
+    border-color: var(--gold-vip);
+    box-shadow: 0 0 30px rgba(212,175,55,0.5);
+}
+
+.vip-avatar-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.vip-card h4 {
+    color: white;
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+}
+
+.supporter-amount {
+    color: var(--gold-vip);
+    font-size: 1.5rem;
+    font-weight: 900;
+}
+
+.card-glow {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(212,175,55,0.3) 0%, transparent 50%);
+    animation: glowRotate 6s linear infinite;
+    pointer-events: none;
+}
+
+@keyframes glowRotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* ==========================================================================
+   13. FOOTER
+   ========================================================================== */
+footer {
+    background: var(--primary-dark);
+    color: white;
+    padding: 60px 0 20px;
+    margin-top: 80px;
+}
+
+.footer-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 40px;
+    margin-bottom: 40px;
+}
+
+.footer-col h4 {
+    font-size: 1.3rem;
+    margin-bottom: 20px;
+    color: var(--accent-red);
+}
+
+.footer-col ul li {
+    margin-bottom: 12px;
+}
+
+.footer-col ul li a {
+    color: var(--text-muted);
+    transition: var(--trans-fast);
+}
+
+.footer-col ul li a:hover {
+    color: white;
+    padding-right: 5px;
+}
+
+.whatsapp-btn-large {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: #25d366;
+    color: white;
+    padding: 12px 25px;
+    border-radius: 30px;
+    font-weight: 700;
+    transition: var(--trans-medium);
+}
+
+.whatsapp-btn-large:hover {
+    background: #20b858;
+    transform: scale(1.05);
+}
+
+.copyrights {
+    text-align: center;
+    padding-top: 30px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    color: var(--text-muted);
+}
+
+.dev-link {
+    color: var(--accent-red);
+    font-weight: 700;
+    display: inline-block;
+    margin-top: 10px;
+    transition: var(--trans-fast);
+}
+
+.dev-link:hover {
+    color: white;
+    text-decoration: underline;
+}
+
+/* ==========================================================================
+   14. SCROLL TO TOP BUTTON
+   ========================================================================== */
+.scroll-top-btn {
+    position: fixed;
+    bottom: 30px;
+    left: 30px;
+    background: var(--accent-red);
+    color: white;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-lg);
+    opacity: 0;
+    visibility: hidden;
+    transition: var(--trans-medium);
+    z-index: 999;
+}
+
+.scroll-top-btn.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.scroll-top-btn:hover {
+    background: #b8032a;
+    transform: translateY(-5px);
+}
+
+/* ==========================================================================
+   15. SIDEBAR (Mobile Menu) - FIXED SCROLLING & Z-INDEX
+   ========================================================================== */
+.sidebar-overlay {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(5px);
+    z-index: 9998; /* Below radar icon but above content */
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.3s;
+}
+
+.sidebar-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.sidebar-content-3d {
+    position: absolute;
+    top: 0;
+    right: -300px;
+    width: 300px;
+    height: 100%;
+    background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+    box-shadow: -10px 0 30px rgba(0,0,0,0.5);
+    transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: flex;
+    flex-direction: column;
+    border-left: 1px solid rgba(255,255,255,0.1);
+    overflow: hidden; /* Prevent content overflow */
+}
+
+.sidebar-overlay.active .sidebar-content-3d {
+    right: 0;
+}
+
+.sidebar-header {
+    padding: 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    background: rgba(0,0,0,0.2);
+    flex-shrink: 0; /* Prevent header from shrinking */
+}
+
+.sidebar-header h3 {
+    color: white;
+    margin: 0;
+}
+
+.close-btn {
+    background: none;
+    color: white;
+    font-size: 1.5rem;
+    border: none;
+    cursor: pointer;
+    transition: var(--trans-fast);
+}
+
+.close-btn:hover {
+    color: var(--accent-red);
+    transform: rotate(90deg);
+}
+
+/* Sidebar body - now properly scrollable */
+.sidebar-body {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Mobile nav list - scrollable content */
+.mobile-nav-list {
+    padding: 20px;
+    flex: 1;
+    min-height: 0; /* Important for flex scrolling */
+}
+
+.mobile-nav-list li {
+    margin-bottom: 10px;
+}
+
+.mobile-nav-list a {
+    display: block;
+    padding: 12px 20px;
+    background: #f8fafc;
+    color: #1e293b;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 1rem;
+    text-align: right;
+    transition: all 0.3s ease;
+    border: 1px solid #e2e8f0;
+}
+
+.mobile-nav-list a:hover {
+    background: #0f172a;
+    color: #fff;
+    transform: translateX(-5px);
+    border-color: #0f172a;
+}
+
+.mobile-nav-list .vip-item a {
+    background: linear-gradient(45deg, #FFD700, #FDB931);
+    color: #000;
+    border: none;
+    text-align: center;
+}
+
+/* Sidebar footer - fixed at bottom */
+.sidebar-footer {
+    padding: 20px;
+    background: rgba(0,0,0,0.3);
+    text-align: center;
+    flex-shrink: 0; /* Prevent footer from shrinking */
+    border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+.sidebar-footer h4 {
+    color: #94a3b8;
+    margin-bottom: 15px;
+    font-size: 0.9rem;
+}
+
+.social-row {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.sb-social {
+    flex: 1;
+    padding: 10px;
+    border-radius: 8px;
+    color: white;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    transition: 0.3s;
+}
+
+.sb-social.fb {
+    background: #1877f2;
+}
+
+.sb-social.wa {
+    background: #25d366;
+}
+
+.sb-social:hover {
+    transform: scale(1.05);
+}
+
+.dev-box p {
+    color: #64748b;
+    font-size: 0.8rem;
+    margin-bottom: 5px;
+}
+
+.dev-btn-3d {
+    display: block;
+    padding: 12px;
+    background: linear-gradient(45deg, #ff00cc, #333399);
+    color: white;
+    border-radius: 50px;
+    font-weight: bold;
+    text-decoration: none;
+    box-shadow: 0 4px 15px rgba(255, 0, 204, 0.3);
+    transition: 0.3s;
+}
+
+.dev-btn-3d:hover {
+    box-shadow: 0 0 20px rgba(255, 0, 204, 0.6);
+    letter-spacing: 2px;
+}
+
+/* ==========================================================================
+   16. SEARCH MODAL - MODERN ANIMATED EXIT
+   ========================================================================== */
+.search-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(15, 23, 42, 0.97);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    z-index: 9999;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Modern close button - top right corner with animation */
+.search-close-btn {
+    position: absolute;
+    top: 30px;
+    left: 30px;
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 10001;
+}
+
+.search-close-btn::before,
+.search-close-btn::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 2px;
+    background: white;
+    transition: all 0.3s ease;
+}
+
+.search-close-btn::before {
+    transform: rotate(45deg);
+}
+
+.search-close-btn::after {
+    transform: rotate(-45deg);
+}
+
+.search-close-btn:hover {
+    background: var(--accent-red);
+    border-color: var(--accent-red);
+    transform: rotate(90deg) scale(1.1);
+    box-shadow: 0 0 20px rgba(217, 4, 41, 0.5);
+}
+
+.search-close-btn:hover::before,
+.search-close-btn:hover::after {
+    background: white;
+}
+
+/* Alternative animated close button styles */
+.search-close-btn:active {
+    transform: rotate(90deg) scale(0.95);
+}
+
+/* Search container */
+.search-container-modern {
+    width: 90%;
+    max-width: 700px;
+    text-align: center;
+    animation: slideUpFade 0.5s ease;
+}
+
+@keyframes slideUpFade {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.input-wrapper {
+    position: relative;
+    border-bottom: 2px solid rgba(255,255,255,0.2);
+    margin-bottom: 40px;
+    transition: 0.3s;
+}
+
+.input-wrapper:focus-within {
+    border-bottom-color: var(--accent-red);
+    transform: scale(1.02);
+}
+
+.search-container-modern input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-size: 2rem;
+    padding: 15px 50px 15px 10px;
+    font-weight: bold;
+    text-align: right;
+}
+
+.search-container-modern input::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.search-icon-large {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.5rem;
+    opacity: 0.7;
+    color: white;
+}
+
+/* Trends section */
+.trends-section h4 {
+    color: #94a3b8;
+    font-size: 1rem;
+    margin-bottom: 20px;
+    font-weight: normal;
+}
+
+.tags-cloud {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+}
+
+.trend-tag {
+    background: rgba(255, 255, 255, 0.08);
+    color: #e2e8f0;
+    padding: 10px 20px;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.trend-tag:hover {
+    background: var(--accent-red);
+    color: #fff;
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(217, 4, 41, 0.4);
+}
+
+/* ==========================================================================
+   17. UTILITY CLASSES
+   ========================================================================== */
+.orb,
+.orb-1,
+.orb-2,
+.vip-bg-animation {
+    display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+}
+
+.modal-card {
+    background: #fff !important;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5) !important;
+}
+
+/* ==========================================================================
+   18. RESPONSIVE DESIGN
+   ========================================================================== */
+@media (min-width: 992px) {
+    .desktop-nav {
+        display: block;
+    }
+    
+    .menu-trigger {
+        display: none;
+    }
+}
+
+@media (max-width: 991px) {
+    .hero-title {
+        font-size: 2.2rem;
+    }
+    
+    .news-grid {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    }
+    
+    .dropdown-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
 @media (max-width: 768px) {
-    .header-flex { flex-direction: column; gap: 10px; }
-    nav ul { justify-content: center; flex-wrap: wrap; gap: 8px; }
-    nav ul li a { font-size: 0.8rem; padding: 4px 8px; }
+    .top-bar {
+        font-size: 0.75rem;
+    }
+    
+    .top-info {
+        gap: 8px;
+    }
+    
+    .hero-title {
+        font-size: 1.8rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1rem;
+    }
+    
+    .section-title {
+        font-size: 1.8rem;
+    }
+    
+    .news-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .filter-buttons {
+        gap: 8px;
+    }
+    
+    .filter-btn {
+        padding: 8px 18px;
+        font-size: 0.85rem;
+    }
+    
+    .search-container-modern input {
+        font-size: 1.5rem;
+    }
+    
+    .search-close-btn {
+        top: 20px;
+        left: 20px;
+        width: 45px;
+        height: 45px;
+    }
 }
 
-/* 2. تمييز زر الإدارة في الزاوية */
-nav ul li:last-child {
-    margin-right: auto; /* يدفع زر الإدارة لأقصى الزاوية في الشاشات الواسعة */
-    border: 1px solid #ffcc00;
-    border-radius: 5px;
-    background: rgba(255, 204, 0, 0.1);
-}
-
-/* 3. جعل رابط الداعمين يتوهج قليلاً */
-a[href="#supportersSection"] {
-    animation: gold-glow 2s infinite alternate;
-}
-@keyframes gold-glow {
-    from { text-shadow: 0 0 2px #D4AF37; }
-    to { text-shadow: 0 0 8px #ffcc00; }
+@media (max-width: 480px) {
+    .text-radar,
+    .text-24 {
+        font-size: 1.3rem;
+    }
+    
+    .hero-title {
+        font-size: 1.5rem;
+    }
+    
+    .vip-title {
+        font-size: 1.8rem;
+    }
+    
+    .modal-body {
+        padding: 25px;
+    }
+    
+    .search-container-modern input {
+        font-size: 1.2rem;
+    }
 }
