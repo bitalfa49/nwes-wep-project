@@ -3,95 +3,703 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>موقعي الإلكتروني</title>
+    <title>نظام الرادار التفاعلي</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui; }
-        body { background: #f5f7fa; color: #333; }
-        header { background: linear-gradient(135deg, #2c3e50, #3498db); color: white; padding: 1rem; }
-        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
-        .navbar { display: flex; justify-content: space-between; align-items: center; }
-        .logo { font-size: 1.8rem; font-weight: bold; color: white; text-decoration: none; }
-        .nav-links { display: flex; list-style: none; gap: 1rem; }
-        .nav-links a { color: white; text-decoration: none; padding: 0.5rem 1rem; }
-        .hero { background: linear-gradient(rgba(44,62,80,0.9), rgba(52,152,219,0.9)); 
-               color: white; padding: 4rem 1rem; text-align: center; }
-        .btn { background: #e74c3c; color: white; padding: 1rem 2rem; border-radius: 50px; 
-              text-decoration: none; display: inline-block; margin-top: 1rem; }
-        section { padding: 3rem 1rem; }
-        .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
-                   gap: 2rem; margin-top: 2rem; }
-        .feature-card { background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        footer { background: #2c3e50; color: white; padding: 2rem 1rem; text-align: center; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0a0f2b 0%, #1a1f3e 100%);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+            direction: rtl;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            padding: 20px 0;
+            border-bottom: 2px solid #00ffea;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #00ffea, #0080ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 10px rgba(0, 255, 234, 0.5);
+        }
+        
+        .subtitle {
+            color: #a0a0ff;
+            font-size: 1.1rem;
+        }
+        
+        .main-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .radar-container {
+            flex: 1;
+            min-width: 300px;
+            background: rgba(10, 15, 40, 0.8);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(0, 255, 234, 0.2);
+        }
+        
+        .radar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(0, 255, 234, 0.3);
+        }
+        
+        .radar-title {
+            font-size: 1.5rem;
+            color: #00ffea;
+        }
+        
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #00ff00;
+            box-shadow: 0 0 10px #00ff00;
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        
+        .radar-canvas-container {
+            position: relative;
+            width: 100%;
+            height: 400px;
+        }
+        
+        #radarCanvas {
+            background-color: #050a1a;
+            border-radius: 10px;
+            width: 100%;
+            height: 100%;
+            border: 2px solid #0080ff;
+        }
+        
+        .controls-panel {
+            flex: 1;
+            min-width: 300px;
+            background: rgba(10, 15, 40, 0.8);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(0, 255, 234, 0.2);
+        }
+        
+        .panel-title {
+            font-size: 1.5rem;
+            color: #00ffea;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(0, 255, 234, 0.3);
+        }
+        
+        .control-group {
+            margin-bottom: 25px;
+        }
+        
+        .control-label {
+            display: block;
+            margin-bottom: 8px;
+            color: #a0a0ff;
+        }
+        
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .slider-value {
+            min-width: 40px;
+            text-align: center;
+            background: rgba(0, 128, 255, 0.2);
+            padding: 5px 10px;
+            border-radius: 5px;
+            color: #00ffea;
+        }
+        
+        input[type="range"] {
+            flex-grow: 1;
+            height: 10px;
+            -webkit-appearance: none;
+            background: linear-gradient(90deg, #0055aa, #00aaff);
+            border-radius: 5px;
+            outline: none;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: #00ffea;
+            cursor: pointer;
+            box-shadow: 0 0 10px #00ffea;
+        }
+        
+        .buttons-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            background: linear-gradient(90deg, #0080ff, #00aaff);
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex: 1;
+            min-width: 140px;
+        }
+        
+        button:hover {
+            background: linear-gradient(90deg, #00aaff, #00ffea);
+            box-shadow: 0 0 15px rgba(0, 255, 234, 0.5);
+            transform: translateY(-2px);
+        }
+        
+        button:active {
+            transform: translateY(1px);
+        }
+        
+        .detection-log {
+            flex-basis: 100%;
+            background: rgba(10, 15, 40, 0.8);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(0, 255, 234, 0.2);
+            margin-top: 20px;
+        }
+        
+        .log-title {
+            font-size: 1.5rem;
+            color: #00ffea;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(0, 255, 234, 0.3);
+        }
+        
+        #detectionList {
+            max-height: 200px;
+            overflow-y: auto;
+            padding: 10px;
+            background: rgba(5, 10, 25, 0.7);
+            border-radius: 8px;
+        }
+        
+        .detection-item {
+            padding: 10px;
+            margin-bottom: 8px;
+            background: rgba(0, 80, 255, 0.1);
+            border-radius: 5px;
+            border-left: 4px solid #00ffea;
+            display: flex;
+            justify-content: space-between;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        .detection-id {
+            font-weight: bold;
+            color: #00ffea;
+        }
+        
+        .detection-distance {
+            color: #a0ffa0;
+        }
+        
+        .detection-angle {
+            color: #ffa0a0;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #a0a0ff;
+            font-size: 0.9rem;
+            border-top: 1px solid rgba(0, 255, 234, 0.2);
+            margin-top: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
     </style>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <header>
-        <div class="container">
-            <nav class="navbar">
-                <a href="#" class="logo"><i class="fas fa-rocket"></i> موقعي</a>
-                <ul class="nav-links">
-                    <li><a href="#home"><i class="fas fa-home"></i> الرئيسية</a></li>
-                    <li><a href="#services"><i class="fas fa-cogs"></i> خدماتنا</a></li>
-                    <li><a href="#contact"><i class="fas fa-envelope"></i> اتصل بنا</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
-
-    <section class="hero" id="home">
-        <div class="container">
-            <h1 style="font-size: 2.5rem; margin-bottom: 1rem;">مرحباً بك في موقعي</h1>
-            <p style="font-size: 1.2rem; max-width: 600px; margin: 0 auto;">
-                هذا موقعي الإلكتروني الأول الذي أنشأته على هاتفي!
-            </p>
-            <a href="#contact" class="btn">ابدأ الآن <i class="fas fa-arrow-left"></i></a>
-        </div>
-    </section>
-
-    <section id="services">
-        <div class="container">
-            <h2 style="text-align: center; font-size: 2rem; margin-bottom: 2rem;">خدماتنا</h2>
-            <div class="features">
-                <div class="feature-card">
-                    <i class="fas fa-laptop-code" style="font-size: 3rem; color: #3498db; margin-bottom: 1rem;"></i>
-                    <h3>تصميم مواقع</h3>
-                    <p>نصمم مواقع ويب جميلة وعملية</p>
+    <div class="container">
+        <header>
+            <h1>نظام الرادار التفاعلي</h1>
+            <p class="subtitle">محاكاة كشف الأهداف وتتبعها في الوقت الحقيقي</p>
+        </header>
+        
+        <div class="main-content">
+            <div class="radar-container">
+                <div class="radar-header">
+                    <h2 class="radar-title">شاشة الرادار</h2>
+                    <div class="status-indicator">
+                        <div class="status-dot"></div>
+                        <span>نشط - كشف الأهداف</span>
+                    </div>
                 </div>
-                <div class="feature-card">
-                    <i class="fas fa-mobile-alt" style="font-size: 3rem; color: #3498db; margin-bottom: 1rem;"></i>
-                    <h3>تطبيقات جوال</h3>
-                    <p>تطبيقات ذكية للهواتف</p>
+                <div class="radar-canvas-container">
+                    <canvas id="radarCanvas"></canvas>
+                </div>
+            </div>
+            
+            <div class="controls-panel">
+                <h2 class="panel-title">لوحة التحكم</h2>
+                
+                <div class="control-group">
+                    <label class="control-label">نطاق الكشف (كم)</label>
+                    <div class="slider-container">
+                        <input type="range" id="rangeSlider" min="10" max="200" value="100" step="10">
+                        <span class="slider-value" id="rangeValue">100 كم</span>
+                    </div>
+                </div>
+                
+                <div class="control-group">
+                    <label class="control-label">سرعة المسح</label>
+                    <div class="slider-container">
+                        <input type="range" id="speedSlider" min="1" max="10" value="5" step="1">
+                        <span class="slider-value" id="speedValue">5</span>
+                    </div>
+                </div>
+                
+                <div class="control-group">
+                    <label class="control-label">حساسية الكشف</label>
+                    <div class="slider-container">
+                        <input type="range" id="sensitivitySlider" min="1" max="10" value="7" step="1">
+                        <span class="slider-value" id="sensitivityValue">7</span>
+                    </div>
+                </div>
+                
+                <div class="buttons-container">
+                    <button id="addTargetBtn">إضافة هدف عشوائي</button>
+                    <button id="clearTargetsBtn">مسح جميع الأهداف</button>
+                    <button id="autoModeBtn">الوضع التلقائي</button>
+                    <button id="resetBtn">إعادة التعيين</button>
+                </div>
+            </div>
+            
+            <div class="detection-log">
+                <h2 class="log-title">سجل الكشف</h2>
+                <div id="detectionList">
+                    <!-- سيتم إضافة عناصر الكشف هنا ديناميكيًا -->
+                    <div class="detection-item">
+                        <span class="detection-id">الهدف #1</span>
+                        <span class="detection-distance">مسافة: 45 كم</span>
+                        <span class="detection-angle">زاوية: 30°</span>
+                    </div>
+                    <div class="detection-item">
+                        <span class="detection-id">الهدف #2</span>
+                        <span class="detection-distance">مسافة: 78 كم</span>
+                        <span class="detection-angle">زاوية: 120°</span>
+                    </div>
+                    <div class="detection-item">
+                        <span class="detection-id">الهدف #3</span>
+                        <span class="detection-distance">مسافة: 32 كم</span>
+                        <span class="detection-angle">زاوية: 240°</span>
+                    </div>
                 </div>
             </div>
         </div>
-    </section>
-
-    <section id="contact" style="background: #f8f9fa;">
-        <div class="container">
-            <h2 style="text-align: center; font-size: 2rem; margin-bottom: 2rem;">اتصل بنا</h2>
-            <div style="max-width: 500px; margin: 0 auto; background: white; padding: 2rem; border-radius: 10px;">
-                <input type="text" placeholder="اسمك" style="width: 100%; padding: 1rem; margin-bottom: 1rem; border: 1px solid #ddd; border-radius: 5px;">
-                <textarea placeholder="رسالتك" style="width: 100%; padding: 1rem; margin-bottom: 1rem; border: 1px solid #ddd; border-radius: 5px; height: 150px;"></textarea>
-                <button style="background: #2c3e50; color: white; padding: 1rem 2rem; border: none; border-radius: 5px; width: 100%; font-size: 1rem;">
-                    <i class="fas fa-paper-plane"></i> إرسال
-                </button>
-            </div>
-        </div>
-    </section>
-
-    <footer>
-        <div class="container">
-            <p>© 2023 موقعي. جميع الحقوق محفوظة.</p>
-            <p>صنع بفخر على هاتف ذكي!</p>
-        </div>
-    </footer>
+        
+        <footer>
+            <p>نظام الرادار التفاعلي - تم التطوير باستخدام HTML5 Canvas وJavaScript</p>
+            <p>يمكن استخدام هذا النظام في أغراض التعليم والمحاكاة فقط</p>
+        </footer>
+    </div>
 
     <script>
-        // كود JavaScript بسيط
-        document.querySelector('button').addEventListener('click', function() {
-            alert('شكراً لك! سيتم الرد عليك قريباً.');
+        // الحصول على عنصر Canvas وسياق الرسم
+        const canvas = document.getElementById('radarCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        // ضبط أبعاد Canvas
+        canvas.width = canvas.offsetWidth;
+        canvas.height = canvas.offsetHeight;
+        
+        // متغيرات الرادار
+        let radarRange = 100; // نطاق الرادار بالكيلومترات
+        let scanAngle = 0; // زاوية المسح الحالية
+        let scanSpeed = 5; // سرعة المسح (1-10)
+        let sensitivity = 7; // حساسية الكشف (1-10)
+        let autoMode = false; // الوضع التلقائي
+        let targets = []; // قائمة الأهداف
+        let detectionLog = []; // سجل الكشف
+        let lastTargetId = 3; // آخر معرف مستخدم للهدف
+        
+        // عناصر التحكم
+        const rangeSlider = document.getElementById('rangeSlider');
+        const rangeValue = document.getElementById('rangeValue');
+        const speedSlider = document.getElementById('speedSlider');
+        const speedValue = document.getElementById('speedValue');
+        const sensitivitySlider = document.getElementById('sensitivitySlider');
+        const sensitivityValue = document.getElementById('sensitivityValue');
+        const addTargetBtn = document.getElementById('addTargetBtn');
+        const clearTargetsBtn = document.getElementById('clearTargetsBtn');
+        const autoModeBtn = document.getElementById('autoModeBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const detectionList = document.getElementById('detectionList');
+        
+        // تهيئة الأهداف العشوائية الأولية
+        initializeRandomTargets();
+        
+        // إعداد مستمعي الأحداث لعناصر التحكم
+        rangeSlider.addEventListener('input', function() {
+            radarRange = parseInt(this.value);
+            rangeValue.textContent = radarRange + ' كم';
         });
+        
+        speedSlider.addEventListener('input', function() {
+            scanSpeed = parseInt(this.value);
+            speedValue.textContent = scanSpeed;
+        });
+        
+        sensitivitySlider.addEventListener('input', function() {
+            sensitivity = parseInt(this.value);
+            sensitivityValue.textContent = sensitivity;
+        });
+        
+        addTargetBtn.addEventListener('click', addRandomTarget);
+        
+        clearTargetsBtn.addEventListener('click', function() {
+            targets = [];
+            updateDetectionLog();
+        });
+        
+        autoModeBtn.addEventListener('click', function() {
+            autoMode = !autoMode;
+            autoModeBtn.textContent = autoMode ? 'إيقاف الوضع التلقائي' : 'الوضع التلقائي';
+            autoModeBtn.style.background = autoMode 
+                ? 'linear-gradient(90deg, #ff8000, #ffaa00)' 
+                : 'linear-gradient(90deg, #0080ff, #00aaff)';
+        });
+        
+        resetBtn.addEventListener('click', function() {
+            radarRange = 100;
+            scanSpeed = 5;
+            sensitivity = 7;
+            autoMode = false;
+            
+            rangeSlider.value = radarRange;
+            rangeValue.textContent = radarRange + ' كم';
+            
+            speedSlider.value = scanSpeed;
+            speedValue.textContent = scanSpeed;
+            
+            sensitivitySlider.value = sensitivity;
+            sensitivityValue.textContent = sensitivity;
+            
+            autoModeBtn.textContent = 'الوضع التلقائي';
+            autoModeBtn.style.background = 'linear-gradient(90deg, #0080ff, #00aaff)';
+            
+            targets = [];
+            initializeRandomTargets();
+        });
+        
+        // إعادة ضبط حجم Canvas عند تغيير حجم النافذة
+        window.addEventListener('resize', function() {
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+        });
+        
+        // تهيئة أهداف عشوائية
+        function initializeRandomTargets() {
+            targets = [];
+            for (let i = 0; i < 3; i++) {
+                addRandomTarget();
+            }
+        }
+        
+        // إضافة هدف عشوائي جديد
+        function addRandomTarget() {
+            lastTargetId++;
+            const distance = Math.random() * radarRange * 0.8 + radarRange * 0.1;
+            const angle = Math.random() * 360;
+            const speed = Math.random() * 5 + 1;
+            const size = Math.random() * 3 + 1;
+            
+            targets.push({
+                id: lastTargetId,
+                distance: distance,
+                angle: angle,
+                speed: speed,
+                size: size,
+                type: Math.random() > 0.5 ? 'aircraft' : 'vehicle',
+                detected: false
+            });
+            
+            updateDetectionLog();
+        }
+        
+        // تحديث سجل الكشف
+        function updateDetectionLog() {
+            detectionList.innerHTML = '';
+            
+            // عرض أحدث 10 عمليات كشف
+            const recentDetections = targets
+                .filter(target => target.detected)
+                .slice(-10);
+            
+            if (recentDetections.length === 0) {
+                detectionList.innerHTML = '<div class="detection-item" style="justify-content: center;">لا توجد أهداف مكتشفة</div>';
+                return;
+            }
+            
+            recentDetections.forEach(target => {
+                const detectionItem = document.createElement('div');
+                detectionItem.className = 'detection-item';
+                
+                detectionItem.innerHTML = `
+                    <span class="detection-id">الهدف #${target.id}</span>
+                    <span class="detection-distance">مسافة: ${Math.round(target.distance)} كم</span>
+                    <span class="detection-angle">زاوية: ${Math.round(target.angle)}°</span>
+                `;
+                
+                detectionList.appendChild(detectionItem);
+            });
+        }
+        
+        // رسم الرادار
+        function drawRadar() {
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const radius = Math.min(centerX, centerY) * 0.85;
+            
+            // مسح الخلفية
+            ctx.fillStyle = '#050a1a';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // رسم دوائر نطاق الرادار
+            ctx.strokeStyle = 'rgba(0, 255, 234, 0.3)';
+            ctx.lineWidth = 1;
+            
+            for (let i = 1; i <= 5; i++) {
+                const circleRadius = radius * (i / 5);
+                ctx.beginPath();
+                ctx.arc(centerX, centerY, circleRadius, 0, Math.PI * 2);
+                ctx.stroke();
+                
+                // كتابة المسافات
+                ctx.fillStyle = 'rgba(0, 255, 234, 0.7)';
+                ctx.font = '12px Arial';
+                ctx.textAlign = 'center';
+                const distance = (radarRange * i / 5).toFixed(0);
+                ctx.fillText(distance + ' كم', centerX, centerY - circleRadius - 5);
+            }
+            
+            // رسم خطوط الزوايا
+            ctx.strokeStyle = 'rgba(0, 255, 234, 0.2)';
+            ctx.lineWidth = 1;
+            
+            for (let angle = 0; angle < 360; angle += 30) {
+                const rad = (angle - 90) * Math.PI / 180;
+                const x = centerX + radius * Math.cos(rad);
+                const y = centerY + radius * Math.sin(rad);
+                
+                ctx.beginPath();
+                ctx.moveTo(centerX, centerY);
+                ctx.lineTo(x, y);
+                ctx.stroke();
+                
+                // كتابة درجات الزوايا
+                if (angle % 90 === 0) {
+                    const labelRadius = radius + 20;
+                    const labelX = centerX + labelRadius * Math.cos(rad);
+                    const labelY = centerY + labelRadius * Math.sin(rad);
+                    
+                    ctx.fillStyle = 'rgba(0, 255, 234, 0.8)';
+                    ctx.font = 'bold 14px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText(angle + '°', labelX, labelY);
+                }
+            }
+            
+            // رسم خط المسح (مؤشر الرادار)
+            const scanRad = (scanAngle - 90) * Math.PI / 180;
+            const scanX = centerX + radius * Math.cos(scanRad);
+            const scanY = centerY + radius * Math.sin(scanRad);
+            
+            // رسم تأثير التدرج للخط
+            const gradient = ctx.createLinearGradient(centerX, centerY, scanX, scanY);
+            gradient.addColorStop(0, 'rgba(0, 255, 234, 0.8)');
+            gradient.addColorStop(1, 'rgba(0, 255, 234, 0.1)');
+            
+            ctx.strokeStyle = gradient;
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(centerX, centerY);
+            ctx.lineTo(scanX, scanY);
+            ctx.stroke();
+            
+            // رسم قطاع المسح
+            ctx.fillStyle = 'rgba(0, 255, 234, 0.05)';
+            ctx.beginPath();
+            ctx.moveTo(centerX, centerY);
+            ctx.arc(centerX, centerY, radius, scanRad - 0.1, scanRad + 0.1);
+            ctx.closePath();
+            ctx.fill();
+            
+            // تحديث زاوية المسح
+            scanAngle += scanSpeed * 0.5;
+            if (scanAngle >= 360) scanAngle = 0;
+            
+            // رسم الأهداف
+            targets.forEach(target => {
+                // تحويل المسافة والزاوية إلى إحداثيات
+                const targetRad = (target.angle - 90) * Math.PI / 180;
+                const targetRadius = (target.distance / radarRange) * radius;
+                const targetX = centerX + targetRadius * Math.cos(targetRad);
+                const targetY = centerY + targetRadius * Math.sin(targetRad);
+                
+                // تحديد ما إذا كان الهدف ضمن زاوية المسح
+                const angleDiff = Math.abs((target.angle - scanAngle + 180) % 360 - 180);
+                const isInScanBeam = angleDiff < sensitivity * 3;
+                
+                // تحديث حالة الكشف إذا كان الهدف ضمن شعاع المسح
+                if (isInScanBeam && targetRadius <= radius && !target.detected) {
+                    target.detected = true;
+                    updateDetectionLog();
+                }
+                
+                // تحديد لون الهدف بناءً على نوعه وحالة الكشف
+                let targetColor;
+                if (!target.detected) {
+                    targetColor = 'rgba(255, 255, 255, 0.3)';
+                } else if (target.type === 'aircraft') {
+                    targetColor = 'rgba(255, 100, 100, 0.9)';
+                } else {
+                    targetColor = 'rgba(100, 255, 100, 0.9)';
+                }
+                
+                // رسم الهدف
+                ctx.fillStyle = targetColor;
+                ctx.beginPath();
+                ctx.arc(targetX, targetY, target.size * 3, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // تأثير النبض للأهداف المكتشفة
+                if (target.detected) {
+                    ctx.strokeStyle = targetColor;
+                    ctx.lineWidth = 1;
+                    ctx.beginPath();
+                    ctx.arc(targetX, targetY, target.size * 5, 0, Math.PI * 2);
+                    ctx.stroke();
+                }
+                
+                // كتابة معرف الهدف
+                if (target.detected) {
+                    ctx.fillStyle = targetColor;
+                    ctx.font = 'bold 12px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.fillText(`#${target.id}`, targetX, targetY - 15);
+                }
+                
+                // تحريك الهدف في الوضع التلقائي
+                if (autoMode) {
+                    target.angle += target.speed * 0.1;
+                    if (target.angle >= 360) target.angle -= 360;
+                    
+                    target.distance += (Math.random() - 0.5) * 0.5;
+                    if (target.distance < 5) target.distance = 5;
+                    if (target.distance > radarRange * 0.9) target.distance = radarRange * 0.9;
+                }
+            });
+            
+            // رسم المعلومات الإضافية
+            ctx.fillStyle = 'rgba(0, 255, 234, 0.9)';
+            ctx.font = 'bold 16px Arial';
+            ctx.textAlign = 'left';
+            ctx.fillText(`نطاق الرادار: ${radarRange} كم`, 20, 30);
+            ctx.fillText(`سرعة المسح: ${scanSpeed}`, 20, 60);
+            ctx.fillText(`حساسية: ${sensitivity}/10`, 20, 90);
+            ctx.fillText(`الأهداف: ${targets.length}`, 20, 120);
+            
+            // رسم اتجاه الشمال
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+            ctx.font = 'bold 14px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('شمال ↑', centerX, 30);
+            
+            // رسم دائرة مركزية
+            ctx.fillStyle = 'rgba(0, 255, 234, 0.8)';
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, 5, 0, Math.PI * 2);
+            ctx.fill();
+        }
+        
+        // حلقة الرسوم المتحركة
+        function animate() {
+            drawRadar();
+            requestAnimationFrame(animate);
+        }
+        
+        // بدء الرسم
+        animate();
+        
+        // إضافة هدف عشوائي تلقائي في الوضع التلقائي
+        setInterval(function() {
+            if (autoMode && Math.random() > 0.95) {
+                addRandomTarget();
+            }
+        }, 3000);
     </script>
 </body>
 </html>
