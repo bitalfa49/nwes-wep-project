@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>موقعي الإلكتروني</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui; }
+        body { background: #f5f7fa; color: #333; }
+        header { background: linear-gradient(135deg, #2c3e50, #3498db); color: white; padding: 1rem; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        .navbar { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.8rem; font-weight: bold; color: white; text-decoration: none; }
+        .nav-links { display: flex; list-style: none; gap: 1rem; }
+        .nav-links a { color: white; text-decoration: none; padding: 0.5rem 1rem; }
+        .hero { background: linear-gradient(rgba(44,62,80,0.9), rgba(52,152,219,0.9)); 
+               color: white; padding: 4rem 1rem; text-align: center; }
+        .btn { background: #e74c3c; color: white; padding: 1rem 2rem; border-radius: 50px; 
+              text-decoration: none; display: inline-block; margin-top: 1rem; }
+        section { padding: 3rem 1rem; }
+        .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+                   gap: 2rem; margin-top: 2rem; }
+        .feature-card { background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        footer { background: #2c3e50; color: white; padding: 2rem 1rem; text-align: center; }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <a href="#" class="logo"><i class="fas fa-rocket"></i> موقعي</a>
+                <ul class="nav-links">
+                    <li><a href="#home"><i class="fas fa-home"></i> الرئيسية</a></li>
+                    <li><a href="#services"><i class="fas fa-cogs"></i> خدماتنا</a></li>
+                    <li><a href="#contact"><i class="fas fa-envelope"></i> اتصل بنا</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero" id="home">
+        <div class="container">
+            <h1 style="font-size: 2.5rem; margin-bottom: 1rem;">مرحباً بك في موقعي</h1>
+            <p style="font-size: 1.2rem; max-width: 600px; margin: 0 auto;">
+                هذا موقعي الإلكتروني الأول الذي أنشأته على هاتفي!
+            </p>
+            <a href="#contact" class="btn">ابدأ الآن <i class="fas fa-arrow-left"></i></a>
+        </div>
+    </section>
+
+    <section id="services">
+        <div class="container">
+            <h2 style="text-align: center; font-size: 2rem; margin-bottom: 2rem;">خدماتنا</h2>
+            <div class="features">
+                <div class="feature-card">
+                    <i class="fas fa-laptop-code" style="font-size: 3rem; color: #3498db; margin-bottom: 1rem;"></i>
+                    <h3>تصميم مواقع</h3>
+                    <p>نصمم مواقع ويب جميلة وعملية</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-mobile-alt" style="font-size: 3rem; color: #3498db; margin-bottom: 1rem;"></i>
+                    <h3>تطبيقات جوال</h3>
+                    <p>تطبيقات ذكية للهواتف</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" style="background: #f8f9fa;">
+        <div class="container">
+            <h2 style="text-align: center; font-size: 2rem; margin-bottom: 2rem;">اتصل بنا</h2>
+            <div style="max-width: 500px; margin: 0 auto; background: white; padding: 2rem; border-radius: 10px;">
+                <input type="text" placeholder="اسمك" style="width: 100%; padding: 1rem; margin-bottom: 1rem; border: 1px solid #ddd; border-radius: 5px;">
+                <textarea placeholder="رسالتك" style="width: 100%; padding: 1rem; margin-bottom: 1rem; border: 1px solid #ddd; border-radius: 5px; height: 150px;"></textarea>
+                <button style="background: #2c3e50; color: white; padding: 1rem 2rem; border: none; border-radius: 5px; width: 100%; font-size: 1rem;">
+                    <i class="fas fa-paper-plane"></i> إرسال
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>© 2023 موقعي. جميع الحقوق محفوظة.</p>
+            <p>صنع بفخر على هاتف ذكي!</p>
+        </div>
+    </footer>
+
+    <script>
+        // كود JavaScript بسيط
+        document.querySelector('button').addEventListener('click', function() {
+            alert('شكراً لك! سيتم الرد عليك قريباً.');
+        });
+    </script>
+</body>
+</html>
